@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="text-h5 text-weight-regular q-ma-md">
-      All {{restrict}}s
+      {{ displayName }} 목록
     </div>
 
     <div class="row justify-center q-pb-xl q-pt-none">
       <div class="col-11">
-        <q-input dense rounded outlined v-model="keyword" :placeholder="`Search for a ${restrict}...`" class="q-mb-md">
+        <q-input dense rounded outlined v-model="keyword" :placeholder="`${displayName} 검색`" class="q-mb-md">
           <template v-slot:append>
             <q-icon v-if="keyword === ''" name="search" />
             <q-icon v-else name="clear" class="cursor-pointer" @click="keyword = ''" />
@@ -49,6 +49,10 @@ export default {
   },
 
   computed: {
+    displayName () {
+      return { circles: '서클', tags: '태그', vas: '성우' }[this.restrict] || this.restrict
+    },
+
     url () {
       return `/api/${this.restrict}/`
     },

@@ -2,7 +2,7 @@
   <q-layout view="hHh Lpr lFf" class="">
     <q-header reveal :reveal-offset="100" @reveal="onHeaderRevealChange" class="shadow-4">
       <q-toolbar class="row justify-between">
-        <q-btn flat dense round @click="drawerOpen = !drawerOpen" icon="menu" aria-label="Menu" />
+        <q-btn flat dense round @click="drawerOpen = !drawerOpen" icon="menu" aria-label="메뉴" />
 
         <q-btn flat size="md" icon="arrow_back_ios" @click="back()" v-if="isNotAtHomePage"/>
 
@@ -15,7 +15,7 @@
         <q-input v-if="$route.name !== 'advance search'" dark dense rounded standout v-model="keyword" debounce="500" input-class="text-right" class="q-mr-sm">
           <template v-slot:before>
             <q-btn round dense flat icon="manage_search" to="/search">
-              <q-tooltip>点此进入聚合搜索，支持多关键字搜索</q-tooltip>
+              <q-tooltip>여러 검색어로 상세 검색하기</q-tooltip>
             </q-btn>
           </template>
           <template v-slot:append>
@@ -76,7 +76,7 @@
 
             <q-item-section>
               <q-item-label class="text-subtitle1">
-                随心听
+                무작위 재생
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -94,7 +94,7 @@
 
             <q-item-section>
               <q-item-label class="text-subtitle1">
-                睡眠定时
+                취침 타이머
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -113,7 +113,7 @@
 
             <q-item-section>
               <q-item-label class="text-subtitle1">
-                夜间模式
+                다크 모드
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -134,7 +134,7 @@
 
             <q-item-section>
               <q-item-label class="text-subtitle1">
-                登出
+                로그아웃
               </q-item-label>
               <q-item-label caption lines="2">{{ userName }}</q-item-label>
             </q-item-section>
@@ -147,12 +147,12 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="power_settings_new" color="primary" text-color="white" />
-          <span class="q-ml-sm">是否退出登录？（若未开启用户验证，则操作无效）</span>
+          <span class="q-ml-sm">로그아웃하시겠습니까? 사용자 인증이 꺼져 있으면 적용되지 않습니다.</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="取消" color="primary" v-close-popup />
-          <q-btn flat label="退出" color="primary" @click="logout()" v-close-popup />
+          <q-btn flat label="취소" color="primary" v-close-popup />
+          <q-btn flat label="로그아웃" color="primary" @click="logout()" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -217,48 +217,48 @@ export default {
       showScroller: false,
       links: [
         {
-          title: '媒体库',
+          title: '라이브러리',
           icon: 'widgets',
           path: '/'
         },
         {
-          title: '聚合搜索',
+          title: '상세 검색',
           icon: 'manage_search',
           path: '/search'
         },
         {
-          title: '大图模式',
+          title: '전체 화면 플레이어',
           icon: 'play_circle',
           path: '/fullScreenPlayer'
         },
         {
-          title: '我的收藏',
+          title: '즐겨찾기',
           icon: 'favorite',
           path: '/favourites'
         },
         {
-          title: '社团',
+          title: '서클',
           icon: 'group',
           path: '/circles'
         },
         {
-          title: '标签',
+          title: '태그',
           icon: 'label',
           path: '/tags'
         },
         {
-          title: '声优',
+          title: '성우',
           icon: 'mic',
           path: '/vas'
         },
         {
-          title: '翻译任务',
+          title: '번역 작업',
           icon: 'subtitles',
           path: '/ai_lyric'
 
         },
         {
-          title: '设定',
+          title: '설정',
           icon: 'tune',
           path: '/admin'
         },
@@ -349,14 +349,14 @@ export default {
         .then((res) => {
           if (res.data.update_available && res.data.notifyUser) {
             this.$q.notify({
-              message: 'GitHub上有新版本',
+              message: 'GitHub에 새 버전이 있습니다.',
               color: 'primary',
               textColor: 'white',
               icon: 'cloud_download',
               timeout: 5000,
               actions: [
-                { label: '好', color: 'white' },
-                { label: '查看', color: 'white', handler: () => {
+                { label: '확인', color: 'white' },
+                { label: '보기', color: 'white', handler: () => {
                     Object.assign(document.createElement('a'), {
                       target: '_blank',
                       href: 'https://github.com/umonaca/kikoeru-express/releases',
@@ -373,8 +373,8 @@ export default {
               type: 'warning',
               timeout: 60000,
               actions: [
-                { label: '以后提醒我', color: 'black' },
-                { label: '前往扫描页', color: 'black', handler: () => this.$router.push('/admin/scanner')}
+                { label: '나중에 알림', color: 'black' },
+                { label: '스캔 화면으로', color: 'black', handler: () => this.$router.push('/admin/scanner')}
               ],
             })
           }

@@ -2,7 +2,7 @@
   <div class="q-ma-md " style="">
     <q-breadcrumbs gutter="xs" v-if="path.length">
       <q-breadcrumbs-el   >
-        <q-btn no-caps flat dense size="md" icon="folder" @click="path = []">ROOT</q-btn>
+        <q-btn no-caps flat dense size="md" icon="folder" @click="path = []">최상위</q-btn>
       </q-breadcrumbs-el>
       
       <q-breadcrumbs-el v-for="(folderName, index) in path"  :key="index"  class="cursor-pointer" >
@@ -19,7 +19,7 @@
               <div class="text-subtitle2">{{ preview_img_idx+1 }}/{{ preview_img_list.length }}</div>
             </div>
             <div v-if="playWorkId > 0" class="col-auto">
-              <q-btn outline @click="setVisualPlayerCover(preview_img_list[preview_img_idx])">用作可视化封面</q-btn>
+              <q-btn outline @click="setVisualPlayerCover(preview_img_list[preview_img_idx])">시각화 화면 표지로 사용</q-btn>
             </div>
           </div>
         </q-card-section>
@@ -29,9 +29,9 @@
         </q-card-section>
 
         <q-card-actions align="around">
-          <q-btn flat label="上一个" color="primary" @click="changePreviewImg(false)" />
-          <q-btn flat label="关闭" color="negative" v-close-popup />
-          <q-btn flat label="下一个" color="primary" @click="changePreviewImg(true)" />
+          <q-btn flat label="이전" color="primary" @click="changePreviewImg(false)" />
+          <q-btn flat label="닫기" color="negative" v-close-popup />
+          <q-btn flat label="다음" color="primary" @click="changePreviewImg(true)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -60,7 +60,7 @@
 
           <q-item-section>
             <q-item-label>{{ item.title }}</q-item-label>
-            <q-item-label v-if="item.children" caption lines="1">{{ `${item.children.length} 项目` }}</q-item-label>
+            <q-item-label v-if="item.children" caption lines="1">{{ `${item.children.length}개 항목` }}</q-item-label>
 
             <!--音频文件时长-->
             <q-item-label
@@ -88,19 +88,19 @@
           >
             <q-list separator>
               <q-item clickable @click="addToQueue(item)" v-if="item.type === 'audio'">
-                <q-item-section>添加到播放列表</q-item-section>
+                <q-item-section>재생 목록에 추가</q-item-section>
               </q-item>
 
               <q-item clickable @click="playNext(item)" v-if="item.type === 'audio'">
-                <q-item-section>下一曲播放</q-item-section>
+                <q-item-section>다음 곡으로 재생</q-item-section>
               </q-item>
 
               <q-item clickable @click="download(item)">
-                <q-item-section>下载文件</q-item-section>
+                <q-item-section>파일 다운로드</q-item-section>
               </q-item>
 
               <q-item clickable @click="aiTranslateToServer(item)" v-if="item.type === 'audio'">
-                <q-item-section>进行AI翻译</q-item-section>
+                <q-item-section>AI 자막 생성</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -325,9 +325,9 @@ export default {
       const urlWithoutToken = imgFile.mediaDownloadUrl ? `${imgFile.mediaDownloadUrl}` : `/api/media/download/${imgFile.hash}`;
       this.$store.commit('AudioPlayer/SET_VISUAL_PLAYER_COVER_URL', urlWithoutToken);
       this.$q.notify({
-        message: "封面设置成功",
+        message: "표지를 설정했습니다.",
         actions: [
-          { label: "前往大屏页面",
+          { label: "전체 화면 플레이어 열기",
             handler: () => {
               // this.$router.push(`/fullScreenPlayer/${this.playWorkId}`)
               this.$router.push(`/fullScreenPlayer`)
@@ -381,7 +381,7 @@ export default {
     },
 
     async updateTreeAITaskStatus() {
-      console.log("检查翻译进度")
+      console.log("번역 진행 상태 확인")
 
       const tasks = await ServerApi.searchWorkTask(this.metadata.id);
 
@@ -481,7 +481,7 @@ export default {
 
     async enableIntervalCheckAITasks() {
       if (this.checkAITaskStatusIntervalId > 0) clearInterval(this.checkAITaskStatusIntervalId)
-      console.log("定期检查ai歌词翻译进度")
+      console.log("AI 자막 번역 진행 상태 정기 확인")
       
       await this.updateTreeAITaskStatus();
       this.checkAITaskStatusIntervalId = setInterval(
@@ -491,7 +491,7 @@ export default {
     },
 
     disableIntervalCheckAITasks() {
-      console.log("取消定期检查ai歌词翻译进度")
+      console.log("AI 자막 번역 진행 상태 정기 확인 취소")
       clearInterval(this.checkAITaskStatusIntervalId)
       this.checkAITaskStatusIntervalId = 0;
     },

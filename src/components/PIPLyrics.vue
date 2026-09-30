@@ -209,7 +209,7 @@ export default {
     openPIPVideoMode() {
       // this.drawLyric(this.currentLyric) // 首先绘制一次
       this.video.play()
-      console.log("打开桌面歌词")
+      console.log("데스크톱 자막 열기")
 
       if (
         typeof this.video.requestPictureInPicture === 'function' &&
@@ -256,19 +256,19 @@ export default {
     },
 
     showUserPrompt() {
-      let msg = "请点击‘打开’按钮确认显示桌面歌词，或者点击‘取消’关闭桌面歌词。（请注意，桌面歌词打开后，原先网页内的歌词就会被隐藏掉）"
-      let okMsg = "请继续"
+      let msg = "화면 속 화면 자막을 열려면 '열기'를 누르세요. 취소하면 기능이 꺼집니다. 이 기능을 켜면 웹페이지의 자막은 숨겨집니다."
+      let okMsg = "계속"
       if (this.isFireFox) {
-        msg = "检测到FireFox浏览器，此浏览器下必须由用户手动选择开启画中画功能，请在10秒内手动选择左上角出现的video组件并开启画中画功能，10秒后video组件将会隐藏并无法操作。如果错过，您也可以重新关闭、打开桌面歌词功能，来再次操作。"
+        msg = "Firefox에서는 화면 속 화면을 직접 켜야 합니다. 10초 안에 왼쪽 위에 나타나는 영상을 선택해 화면 속 화면을 켜세요. 시간이 지나면 영상이 숨겨집니다. 놓쳤다면 데스크톱 자막을 껐다가 다시 켜세요."
         // firefox尚不支持这种js触发画中画功能，先将video显示出来，让用户手动选择画中画功能，然后隐藏页面中的video元素
-        okMsg = "好的"
+        okMsg = "확인"
       }
 
       this.$q.dialog({
-        title: '桌面歌词',
+        title: '데스크톱 자막',
         message: msg,
         ok: okMsg,
-        cancel: "关闭桌面歌词",
+        cancel: "데스크톱 자막 끄기",
         persistent: false
       }).onOk(async () => {
         this.openPIPVideoMode()
@@ -306,7 +306,7 @@ export default {
       if (this.isVideoCanPlay) {
         this.showUserPrompt() 
       } else {
-        this.$q.notify({message: "桌面歌词打开失败，请播放音频5秒后再次尝试打开", timeout: 500})
+        this.$q.notify({message: "데스크톱 자막을 열지 못했습니다. 오디오를 5초 이상 재생한 뒤 다시 시도하세요.", timeout: 500})
       }
     },
 

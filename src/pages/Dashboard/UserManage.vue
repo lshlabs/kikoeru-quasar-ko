@@ -3,27 +3,27 @@
     <q-card class="q-ma-md">
       <q-form @submit="updateAdminPassword()">
         <q-toolbar>
-          <q-toolbar-title>修改管理员密码</q-toolbar-title>
+          <q-toolbar-title>관리자 비밀번호 변경</q-toolbar-title>
         </q-toolbar>
 
         <div class="q-pa-sm">
-          <q-input outlined dense type="password" label="新密码"
+          <q-input outlined dense type="password" label="새 비밀번호"
             v-model="adminNewPassword"
             lazy-rules
-            :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
+            :rules="[ val => val.length >= 5 || '비밀번호는 5자 이상이어야 합니다.' ]"
           />
 
-          <q-input outlined dense type="password" label="确认密码"
+          <q-input outlined dense type="password" label="비밀번호 확인"
             v-model="adminConfirmPassword"
             lazy-rules
             :rules="[
-              val => val.length >= 5 || '密码长度至少为 5',
-              val => val === adminNewPassword || '两次密码输入不一致'
+              val => val.length >= 5 || '비밀번호는 5자 이상이어야 합니다.',
+              val => val === adminNewPassword || '비밀번호가 일치하지 않습니다.'
             ]"
           />
 
           <div class="row justify-end">
-            <q-btn :loading="loadingUpdateAdminPassword" type="submit" color="primary" label="修改" />
+            <q-btn :loading="loadingUpdateAdminPassword" type="submit" color="primary" label="변경" />
           </div>
         </div>
       </q-form>
@@ -32,30 +32,30 @@
     <q-card class="q-ma-md">
       <q-form @submit="addNewUser()">
         <q-toolbar>
-          <q-toolbar-title>添加新用户</q-toolbar-title>
+          <q-toolbar-title>새 사용자 추가</q-toolbar-title>
         </q-toolbar>
 
         <div class="q-pa-sm">
-          <q-select dense outlined label="用户组" v-model="newuser.group" :options="groups" class="q-mb-md" />
+          <q-select dense outlined label="사용자 그룹" v-model="newuser.group" :options="groups" :option-label="groupLabel" class="q-mb-md" />
 
           <q-input outlined dense
-            v-model="newuser.name" label="用户名"
+            v-model="newuser.name" label="사용자 이름"
             required
             lazy-rules
             :rules="[
-                val => val.length >= 5 || '用户名长度至少为 5',
-                val => !users.find(user => user.name === val) || '该名称已存在，用户名不能重复',
+                val => val.length >= 5 || '사용자 이름은 5자 이상이어야 합니다.',
+                val => !users.find(user => user.name === val) || '이미 사용 중인 사용자 이름입니다.',
               ]" 
           />
 
-          <q-input outlined dense label="密码"
+          <q-input outlined dense label="비밀번호"
             v-model="newuser.password"
             lazy-rules
-            :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
+            :rules="[ val => val.length >= 5 || '비밀번호는 5자 이상이어야 합니다.' ]"
           />
 
           <div class="row justify-end">
-            <q-btn :loading="loadingAddNewUser" type="submit" color="primary" label="添加" />
+            <q-btn :loading="loadingAddNewUser" type="submit" color="primary" label="추가" />
           </div>
         </div>
       </q-form>
@@ -63,7 +63,7 @@
 
     <q-card class="q-ma-md q-pa-sm">
       <q-table
-        title="所有用户"
+        title="모든 사용자"
         :data="users"
         :columns="columns"
         row-key="name"
@@ -72,19 +72,19 @@
         :selected.sync="selected"
       />
       <div class="row justify-end">
-        <q-btn :loading="loadingDeleteUsers" :disable="selected.length === 0" @click="confirm = true" color="primary" label="删除" />
+        <q-btn :loading="loadingDeleteUsers" :disable="selected.length === 0" @click="confirm = true" color="primary" label="삭제" />
       </div>
     </q-card>
 
     <q-dialog v-model="confirm" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="q-ma-sm text-h6">确认删除选中用户？</span>
+          <span class="q-ma-sm text-h6">선택한 사용자를 삭제하시겠습니까?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="取消" color="primary" v-close-popup />
-          <q-btn flat label="确认" color="primary" @click="deleteUsers()" v-close-popup />
+          <q-btn flat label="취소" color="primary" v-close-popup />
+          <q-btn flat label="확인" color="primary" @click="deleteUsers()" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -101,8 +101,8 @@ export default {
     return {
       selected: [],
       columns: [
-        { name: 'desc', required: true, label: '用户名', align: 'left', field: 'name', sortable: true },
-        { name: 'calories', required: true, label: '用户组', align: 'center', field: 'group', sortable: true },
+        { name: 'desc', required: true, label: '사용자 이름', align: 'left', field: 'name', sortable: true },
+        { name: 'calories', required: true, label: '사용자 그룹', align: 'center', field: 'group', format: value => this.groupLabel(value), sortable: true },
       ],
       users: [],
       loadingDeleteUsers: false,
@@ -125,8 +125,12 @@ export default {
   },
 
   methods: {
+    groupLabel (group) {
+      return { user: '사용자', guest: '게스트' }[group] || group
+    },
+
     getSelectedString () {
-      return this.selected.length === 0 ? '' : `${this.selected.length} record${this.selected.length > 1 ? 's' : ''} selected of ${this.users.length}`
+      return this.selected.length === 0 ? '' : `${this.users.length}명 중 ${this.selected.length}명 선택`
     },
 
     addNewUser () {

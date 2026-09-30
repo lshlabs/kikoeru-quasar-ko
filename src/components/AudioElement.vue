@@ -318,7 +318,7 @@ export default {
       if (!this.resumeHistroyDone) {
         this.player.currentTime = this.resumeHistroySeconds;
         this.RESUME_HISTROY_SECONDS_DONE()
-        this.$q.notify({message: "已恢复播放历史", timeout: 1000})
+        this.$q.notify({message: "재생 위치를 복원했습니다.", timeout: 1000})
       }
     },
 
@@ -424,13 +424,13 @@ export default {
 
         // 有lrc歌词文件
         this.lrcAvailable = true;
-        console.log('读入歌词');
+        console.log('자막 읽기');
         const lrcUrl = `/api/media/stream/${check_response.data.hash}?token=${token}`;
         const lyricExtension = check_response.data.lyricExtension.toLowerCase();
 
         // 开始下载具体的lrc内容
         const response = await this.$axios.get(lrcUrl)
-        console.log('歌词读入成功');
+        console.log('자막 읽기 완료');
         console.log('srt convert to lrc');
         if (lyricExtension == ".srt" || lyricExtension == ".vtt") {
           response.data = convert_srt_vtt_to_lrc(response.data);
@@ -482,13 +482,13 @@ export default {
       let useLooseLyric = false; // 宽松的歌词匹配策略
       try {
         do {
-          console.log("搜索ai歌词，第一阶段，严格匹配workId和文件title")
+          console.log("AI 자막 검색: 1단계, workId와 파일 title 정확히 일치")
           tasks = await ServerApi.searchWorkTask(workId, audioFileName);
           tasks = tasks.filter(t => t.status == AILyricTaskStatus.SUCCESS)
           useLooseLyric = false;
           if (tasks.length >= 1) break;
 
-          console.log("搜索ai歌词，第二阶段，查找workId作品内所有歌词")
+          console.log("AI 자막 검색: 2단계, 해당 workId의 모든 자막 조회")
           tasks = await ServerApi.searchWorkTask(workId);
           tasks = tasks.filter((t) => t.status == AILyricTaskStatus.SUCCESS && audioLyricNameMatch(audioFileName, t.fileName))
           useLooseLyric = true;
@@ -498,19 +498,19 @@ export default {
         } while(0);
 
       } catch(e) {
-        console.log("查找ai歌词失败: ", e)
+        console.log("AI 자막 검색 실패: ", e)
       }
 
       if (tasks.length >= 1) {
-        console.log(`  已找到ai歌词记录${tasks.length}个`)
+        console.log(`  AI 자막 기록 ${tasks.length}개 검색됨`)
         
-        console.log(`  加载第一个歌词记录，id = ${tasks[0].id}`)
+        console.log(`  첫 번째 자막 기록 로드, id = ${tasks[0].id}`)
         await this.loadRemoteAILyricTaskId(tasks[0].id)
         if (useLooseLyric) {
-          this.$q.notify({message: "使用宽松的歌词匹配策略", timeout: 2000})
+          this.$q.notify({message: "유사한 이름의 자막을 사용합니다.", timeout: 2000})
         }
       } else {
-        console.warn("没有找到ai歌词")
+        console.warn("AI 자막을 찾지 못함")
         this.resetToNoLyricStatus(); // 没有找到ai歌词的话，则必然先没有本地歌词，清空歌词状态
       }
     },
@@ -621,7 +621,7 @@ export default {
       document.addEventListener('click', initAudio);
       if (this.$q.platform.is.safari && this.$q.platform.is.mobile) {
         this.$q.notify({
-          message: "监测到safari平台上开启了音频可视化功能，注意移动端safari有bug，如果没有声音的话，请关闭音频可视化功能",
+          message: "Safari에서 오디오 시각화가 켜져 있습니다. 모바일 Safari에서 소리가 나지 않으면 오디오 시각화를 꺼 주세요.",
           timeout: 5000
         })
       }

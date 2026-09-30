@@ -3,7 +3,7 @@
     <q-header elevated class="bg-black">
       <q-toolbar>
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-        <q-toolbar-title>仪表盘</q-toolbar-title>
+        <q-toolbar-title>관리자 화면</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -65,28 +65,28 @@ export default {
       miniState: true,
       links: [
         {
-          title: '音声库',
+          title: '음성 라이브러리',
           icon: 'folder',
           path: '/admin'
         },
         {
-          title: '扫描',
+          title: '스캔',
           icon: 'youtube_searched_for',
           path: '/admin/scanner'
         },
         {
-          title: '用户管理',
+          title: '사용자 관리',
           icon: 'person',
           path: '/admin/usermanage'
         },
         {
-          title: '高级设置',
+          title: '고급 설정',
           icon: 'settings',
           path: '/admin/advanced'
         },
         
         {
-          title: '回到主页',
+          title: '홈으로',
           icon: 'home',
           path: '/'
         }
@@ -96,7 +96,11 @@ export default {
 
   sockets: {
     success (payload) {
-      this.showSuccNotif(payload.message)
+      this.showSuccNotif(
+        typeof payload.message === 'string' && payload.message.trim() === '成功登录管理后台.'
+          ? '관리자 화면에 연결되었습니다.'
+          : payload.message
+      )
       if (payload.auth) {
         this.$store.commit('User/INIT', payload.user)
         this.$store.commit('User/SET_AUTH', payload.auth)

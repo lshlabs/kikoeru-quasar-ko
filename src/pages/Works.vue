@@ -13,7 +13,7 @@
       <q-input
         outlined
         autofocus
-        label="关键字搜索"
+        label="검색어"
         :hint="advanceSearchBarHint"
         v-model="editKeyword"
         @keyup.enter="onAddAdvanceSearchKeyword"
@@ -27,7 +27,7 @@
     <div class="q-mt-lg q-ml-md row items-center">
       <span class="text-h5 text-weight-regular q-pa-xs relative-position">
         {{pageTitle}}
-        <q-badge color="secondary" floating>{{pagination.totalCount}}</q-badge>
+        <q-badge color="secondary" class="q-ml-sm">{{pagination.totalCount}}</q-badge>
       </span>
       <div v-if="isAdvanceSearch"><!--高级搜索模式的多关键字展示-->
         <q-badge class="q-ma-xs" v-for="meta,index in advanceSearchKeywords" :key="meta.t+meta.d">
@@ -48,7 +48,8 @@
       </div>
     </div>
 
-    <div class="row justify-between q-mb-md q-mx-sm">
+    <div class="row justify-between q-mb-md q-mx-sm works-filters">
+      <div class="works-filter-selects">
       <!-- 排序属性 -->
       <q-select
         dense
@@ -60,8 +61,8 @@
         v-model="sortCategoryOption"
         :options="sortCategoryOptions"
         :option-label="humanReadableLabel"
-        label="排序属性"
-        class="col-auto"
+        label="정렬 기준"
+        class="works-sort-select"
       />
 
       <!-- 年龄分级 -->
@@ -75,8 +76,8 @@
         v-model="nsfwOption"
         :options="nsfwOptions"
         :option-label="humanReadableLabel"
-        label="年龄分级"
-        class="col-auto"
+        label="연령 등급"
+        class="works-age-select"
       />
 
       <!-- 字幕筛选 -->
@@ -85,20 +86,35 @@
         rounded
         outlined
         bg-color=""
-        style="min-width: 8rem;"
         transition-show="scale"
         transition-hide="scale"
         v-model="lyricOption"
         :options="lyricOptions"
         :option-label="humanReadableLabel"
-        label="字幕筛选"
+        label="자막 필터"
         clearable
         multiple
-        class="col-auto"
+        class="works-lyric-select"
       />
 
-      <!-- 排序顺序 -->
-      <q-toggle v-model="sortInDesc" :label="sortInDesc ? '降序' : '升序'" />
+      </div>
+
+      <div class="works-filter-controls">
+      <q-btn-toggle
+        dense
+        spread
+        rounded
+        v-model="sortInDesc"
+        toggle-color="primary"
+        color="white"
+        text-color="primary"
+        :options="[
+          { icon: 'arrow_downward', value: true, attrs: { 'aria-label': '내림차순', title: '내림차순' } },
+          { icon: 'arrow_upward', value: false, attrs: { 'aria-label': '오름차순', title: '오름차순' } }
+        ]"
+        style="width: 85px;"
+        class="col-auto"
+      />
 
       <!-- 切换显示模式按钮 -->
       <q-btn-toggle
@@ -151,6 +167,7 @@
         class="col-auto"
         v-if="$q.screen.width > 700 && !listMode"
       />
+      </div>
 
     </div>
 
@@ -191,7 +208,7 @@
           </div>
         </div>
 
-        <div v-show="stopLoad" class="q-mt-lg q-mb-xl text-h6 text-bold text-center">无更多作品</div>
+        <div v-show="stopLoad" class="q-mt-lg q-mb-xl text-h6 text-bold text-center">더 이상 작품이 없습니다.</div>
 
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
@@ -240,7 +257,6 @@ export default {
       // 排序种类，例如可以选择按照发售日期来排序结果
       sortCategoryOption: "release",
       sortCategoryOptions: ["release", "rating", "dl_count", "price", "rate_average_2dp", "review_count", "id", "created_at", "random"],
-
       nsfwOption: "nsfw_0", 
       nsfwOptions: ["nsfw_0", "nsfw_1", "nsfw_2"], // nsfw_0无年龄限制，nsfw_1全年龄，nsfw_2十八禁
 
@@ -320,8 +336,8 @@ export default {
     },
 
     advanceSearchBarHint() {
-      if (this.editKeyword === "") return "模糊关键字，可搜索作品名、声优名、标签名、社团名"
-      else return "按回车或者右侧加号添加"
+      if (this.editKeyword === "") return "작품명, 성우, 태그, 서클 이름을 검색할 수 있습니다."
+      else return "Enter 키나 오른쪽 + 버튼으로 추가하세요."
     },
 
     ...mapState('AudioPlayer', [
@@ -465,13 +481,13 @@ export default {
 
             switch (restrict) {
               case 'tags':
-                pageTitle = '搜索标签：'
+                pageTitle = '태그 검색: '
                 break
               case 'vas':
-                pageTitle = '搜索声优：'
+                pageTitle = '성우 검색: '
                 break
               case 'circles':
-                pageTitle = '社团作品：'
+                pageTitle = '서클 작품: '
                 break
             }
             // pageTitle += name || ''
@@ -489,13 +505,13 @@ export default {
             }
           })
       } else if (this.$route.query.keyword) {
-        this.pageTitle = '搜索关键字：';
+        this.pageTitle = '검색어: ';
         this.searchMetas = [this.$route.query.keyword];
       } else if (this.isAdvanceSearch) {
-        this.pageTitle = '聚合搜索：'
+        this.pageTitle = '상세 검색: '
 
       } else {
-        this.pageTitle = '所有作品'
+        this.pageTitle = '모든 작품'
         this.searchMetas = [];
       }
     },
@@ -516,20 +532,20 @@ export default {
     // 通过这个函数可以将release转换成更加可阅读的文字标签“发售日期”
     humanReadableLabel(label) {
       switch(label) {
-        case "release": return "发售日期";
-        case "rating": return "我的评价";
-        case "dl_count": return "售出数量";
-        case "price": return "售出价格";
-        case "rate_average_2dp": return "听众评分";
-        case "review_count": return "评论数量";
-        case "id": return "作品番号";
-        case "created_at": return "添加时间";
-        case "random": return "随机排序";
-        case "nsfw_0": return "所有分级";
-        case "nsfw_1": return "全年龄";
-        case "nsfw_2": return "十八禁";
-        case "lyric_local": return "本地歌词";
-        case "lyric_ai": return "AI歌词";
+        case "release": return "발매일";
+        case "rating": return "내 평가";
+        case "dl_count": return "판매량";
+        case "price": return "판매 가격";
+        case "rate_average_2dp": return "청취자 평점";
+        case "review_count": return "리뷰 수";
+        case "id": return "작품 번호";
+        case "created_at": return "추가한 날짜";
+        case "random": return "무작위 정렬";
+        case "nsfw_0": return "전체 등급";
+        case "nsfw_1": return "전연령";
+        case "nsfw_2": return "성인용";
+        case "lyric_local": return "로컬 자막";
+        case "lyric_ai": return "AI 자막";
         default: return label;
       }
     },
@@ -546,13 +562,13 @@ export default {
     onAddAdvanceSearchKeyword() {
       const keyword = this.editKeyword.trim()
       if (keyword === "") {
-        this.showErrNotif("无法添加空白的关键字");
+        this.showErrNotif("빈 검색어는 추가할 수 없습니다.");
         return;
       }
 
       for (let kw of this.advanceSearchKeywords) {
         if (kw.t == AdvanceSearchCondType.FUZZY && kw.d == keyword) {
-          this.showErrNotif("关键字重复，添加失败");
+          this.showErrNotif("이미 추가한 검색어입니다.");
           return;
         }
       }
@@ -575,6 +591,55 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.works-filter-selects,
+.works-filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.works-filter-selects {
+  flex-wrap: wrap;
+}
+
+.works-filter-controls {
+  flex-wrap: wrap;
+}
+
+.works-sort-select {
+  width: 176px;
+}
+
+.works-age-select,
+.works-lyric-select {
+  width: 144px;
+}
+
+@media (max-width: 599px) {
+  .works-filters {
+    gap: 8px;
+  }
+
+  .works-filter-selects,
+  .works-filter-controls {
+    width: 100%;
+  }
+
+  .works-filter-selects {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .works-filter-selects .q-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .works-filter-controls {
+    justify-content: flex-end;
+  }
+}
+
   .list {
     // 宽度 >= $breakpoint-sm-min
     @media (min-width: $breakpoint-sm-min) {

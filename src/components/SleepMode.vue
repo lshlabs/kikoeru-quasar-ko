@@ -11,12 +11,12 @@
 
         <div class="row justify-between">
           <q-card-actions>
-            <q-btn flat label="取消定时" color="primary" @click="clearSleepTimer" :disable="!sleepMode" v-close-popup />
+            <q-btn flat label="타이머 끄기" color="primary" @click="clearSleepTimer" :disable="!sleepMode" v-close-popup />
           </q-card-actions>
 
           <q-card-actions align="right">
-            <q-btn flat label="取消" color="primary" v-close-popup />
-            <q-btn flat label="确定" color="primary" @click="setSleepTimer" v-close-popup />
+            <q-btn flat label="취소" color="primary" v-close-popup />
+            <q-btn flat label="확인" color="primary" @click="setSleepTimer" v-close-popup />
           </q-card-actions>
         </div>
 
@@ -90,7 +90,7 @@ export default {
       } catch {
         console.log('Web Storage API error');
       }
-      this.showSuccNotif(`将于${this.time}停止播放`);
+      this.showSuccNotif(`${this.time}에 재생을 멈춥니다.`);
     },
 
     clearSleepTimer() {
@@ -101,7 +101,7 @@ export default {
       } catch {
         console.log('Web Storage API error');
       }
-      this.showSuccNotif('已关闭睡眠模式');
+      this.showSuccNotif('취침 타이머를 껐습니다.');
     },
 
     showSuccNotif (message) {

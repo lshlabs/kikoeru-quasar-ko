@@ -1,15 +1,15 @@
 <template>
-  <q-form @submit="onSubmit">
+  <q-form @submit="onSubmit" class="advanced-settings">
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>网页偏好设置（每个浏览器之间，此部分配置相互独立）</q-toolbar-title>
+        <q-toolbar-title>브라우저별 설정</q-toolbar-title>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>高级音频模式</q-item-label>
-            <q-item-label caption>支持显示音频特效、左右声道反转等音频功能，建议在桌面浏览器中开启，移动端iOS设备会有声音播放bug</q-item-label>
+            <q-item-label>고급 오디오 모드</q-item-label>
+            <q-item-label caption>오디오 시각화와 좌우 채널 전환을 사용할 수 있습니다. 데스크톱 브라우저 사용을 권장합니다. iOS 모바일에서는 소리가 나지 않을 수 있습니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -19,8 +19,8 @@
 
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>启用视频源作为播放格式</q-item-label>
-            <q-item-label caption>开启此选项后，视频格式(mp4)用于播放音频的同时，也可以看到视频画面(大图模式下)</q-item-label>
+            <q-item-label>영상 소스 사용</q-item-label>
+            <q-item-label caption>MP4 파일의 소리를 재생하면서 전체 화면 플레이어에서 영상도 볼 수 있습니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -30,8 +30,8 @@
 
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>切换回旧式作品卡片UI</q-item-label>
-            <q-item-label caption>搜索页面展示作品使用旧的卡片样式，旧式卡片可以直接显示所有标签</q-item-label>
+            <q-item-label>이전 작품 카드 사용</q-item-label>
+            <q-item-label caption>검색 결과에 이전 카드 디자인을 사용합니다. 이전 카드는 모든 태그를 바로 보여 줍니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -42,36 +42,36 @@
     </q-card>
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>播放器设置</q-toolbar-title>
+        <q-toolbar-title>플레이어 설정</q-toolbar-title>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>后退按钮跳跃秒数</q-item-label>
-            <q-item-label caption>播放时后退按钮跳跃秒数</q-item-label>
+            <q-item-label>뒤로 이동할 시간</q-item-label>
+            <q-item-label caption>뒤로 이동 버튼을 누를 때 건너뛸 시간</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
             <div class="q-gutter-sm">
-              <q-radio dense v-model="rewindSeekTime" val=5 label="5 秒" />
-              <q-radio dense v-model="rewindSeekTime" val=10 label="10 秒" />
-              <q-radio dense v-model="rewindSeekTime" val=30 label="30 秒" />
+              <q-radio dense v-model="rewindSeekTime" val=5 label="5 초" />
+              <q-radio dense v-model="rewindSeekTime" val=10 label="10 초" />
+              <q-radio dense v-model="rewindSeekTime" val=30 label="30 초" />
             </div>
           </q-item-section>
         </q-item>
 
         <q-item>
           <q-item-section>
-            <q-item-label>前进按钮跳跃秒数</q-item-label>
-            <q-item-label caption>播放时前进按钮跳跃秒数</q-item-label>
+            <q-item-label>앞으로 이동할 시간</q-item-label>
+            <q-item-label caption>앞으로 이동 버튼을 누를 때 건너뛸 시간</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
             <div class="q-gutter-sm">
-              <q-radio dense v-model="forwardSeekTime" val="5" label="5 秒" />
-              <q-radio dense v-model="forwardSeekTime" val="10" label="10 秒" />
-              <q-radio dense v-model="forwardSeekTime" val="30" label="30 秒" />
+              <q-radio dense v-model="forwardSeekTime" val="5" label="5 초" />
+              <q-radio dense v-model="forwardSeekTime" val="10" label="10 초" />
+              <q-radio dense v-model="forwardSeekTime" val="30" label="30 초" />
             </div>
           </q-item-section>
         </q-item>
@@ -80,29 +80,29 @@
 
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>爬虫相关设置</q-toolbar-title>
+        <q-toolbar-title>메타데이터 수집 설정</q-toolbar-title>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>标签语言</q-item-label>
-            <q-item-label caption>从 DLSite 爬取的标签元数据的语言</q-item-label>
+            <q-item-label>태그 수집 언어</q-item-label>
+            <q-item-label caption>DLsite에서 가져올 태그 메타데이터의 언어</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
             <div class="q-gutter-sm">
-              <q-radio dense v-model="config.tagLanguage" val="zh-cn" label="简" />
-              <q-radio dense v-model="config.tagLanguage" val="zh-tw" label="繁" />
-              <q-radio dense v-model="config.tagLanguage" val="ja-jp" label="日" />
+              <q-radio dense v-model="config.tagLanguage" val="zh-cn" label="중국어 간체" />
+              <q-radio dense v-model="config.tagLanguage" val="zh-tw" label="중국어 번체" />
+              <q-radio dense v-model="config.tagLanguage" val="ja-jp" label="일본어" />
             </div>
           </q-item-section>
         </q-item>
 
         <q-item>
           <q-item-section>
-            <q-item-label>DLsite 超时时间</q-item-label>
-            <q-item-label caption>默认 10000 毫秒</q-item-label>
+            <q-item-label>DLsite 요청 제한 시간</q-item-label>
+            <q-item-label caption>기본값: 10,000ms</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -117,8 +117,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>HVDB 超时时间</q-item-label>
-            <q-item-label caption>默认 10000 毫秒</q-item-label>
+            <q-item-label>HVDB 요청 제한 시간</q-item-label>
+            <q-item-label caption>기본값: 10,000ms</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -133,8 +133,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>重新请求间隔时间</q-item-label>
-            <q-item-label caption>默认 2000 毫秒</q-item-label>
+            <q-item-label>재시도 간격</q-item-label>
+            <q-item-label caption>기본값: 2,000ms</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -149,8 +149,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>请求最大尝试次数</q-item-label>
-            <q-item-label caption>默认 5</q-item-label>
+            <q-item-label>최대 재시도 횟수</q-item-label>
+            <q-item-label caption>기본값: 5</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -165,8 +165,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>爬虫并行任务数量</q-item-label>
-            <q-item-label caption>默认 16</q-item-label>
+            <q-item-label>동시 수집 작업 수</q-item-label>
+            <q-item-label caption>기본값: 16</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -181,8 +181,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>HTTP 代理服务主机 IP</q-item-label>
-            <q-item-label caption>此项为空时默认为本机</q-item-label>
+            <q-item-label>HTTP 프록시 호스트 IP</q-item-label>
+            <q-item-label caption>비워 두면 이 컴퓨터를 사용합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -196,8 +196,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>HTTP 代理服务端口号 </q-item-label>
-            <q-item-label caption>此项为 0 时默认不使用代理</q-item-label>
+            <q-item-label>HTTP 프록시 포트 </q-item-label>
+            <q-item-label caption>0이면 프록시를 사용하지 않습니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -214,14 +214,14 @@
 
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>文件夹扫描相关设置</q-toolbar-title>
+        <q-toolbar-title>폴더 스캔 설정</q-toolbar-title>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>最大递归扫描深度</q-item-label>
-            <q-item-label caption>默认 2</q-item-label>
+            <q-item-label>최대 하위 폴더 깊이</q-item-label>
+            <q-item-label caption>기본값: 2</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -235,8 +235,8 @@
         </q-item>
         <q-item>
           <q-item-section>
-            <q-item-label>扫描时跳过清理音声库</q-item-label>
-            <q-item-label caption>是否跳过清理不存在的音声（不推荐，默认不跳过）</q-item-label>
+            <q-item-label>스캔 시 없는 작품 정리 건너뛰기</q-item-label>
+            <q-item-label caption>없는 음성 작품을 목록에서 정리하지 않습니다. 권장하지 않으며 기본값은 끔입니다.</q-item-label>
           </q-item-section>
 
           <q-item-section side>
@@ -248,15 +248,15 @@
 
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>Web 服务器相关设置</q-toolbar-title>
-        <div class="q-pr-xs">更改此设置需要重启程序</div>
+        <q-toolbar-title>웹 서버 설정</q-toolbar-title>
+        <div class="q-pr-xs">설정을 변경한 뒤 프로그램을 재시작해야 합니다.</div>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>用户验证</q-item-label>
-            <q-item-label caption>是否启用用户验证（生产环境下无法修改此设置）</q-item-label>
+            <q-item-label>사용자 인증</q-item-label>
+            <q-item-label caption>사용자 인증을 사용합니다. 운영 환경에서는 변경할 수 없습니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -266,8 +266,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>启用Gzip</q-item-label>
-            <q-item-label caption>对网络传输启用Gzip压缩</q-item-label>
+            <q-item-label>Gzip 사용</q-item-label>
+            <q-item-label caption>네트워크 전송에 Gzip 압축을 사용합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -277,8 +277,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>设置端口号</q-item-label>
-            <q-item-label caption>服务器监听端口号</q-item-label>
+            <q-item-label>포트 설정</q-item-label>
+            <q-item-label caption>서버가 연결을 기다릴 포트</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -293,8 +293,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>屏蔽远程连接</q-item-label>
-            <q-item-label caption>只允许本地访问，默认为false。更改此设置需要重启程序</q-item-label>
+            <q-item-label>원격 접속 차단</q-item-label>
+            <q-item-label caption>로컬 접속만 허용합니다. 기본값은 꺼짐이며 변경 후 재시작해야 합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -304,8 +304,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>token 过期时间</q-item-label>
-            <q-item-label caption>默认 2592000 秒</q-item-label>
+            <q-item-label>토큰 유효 기간</q-item-label>
+            <q-item-label caption>기본값: 2,592,000초</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -320,8 +320,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>每页显示的音声数量</q-item-label>
-            <q-item-label caption>默认 12</q-item-label>
+            <q-item-label>페이지당 작품 수</q-item-label>
+            <q-item-label caption>기본값: 12</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -338,14 +338,14 @@
 
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>安全设置</q-toolbar-title>
+        <q-toolbar-title>보안 설정</q-toolbar-title>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>生产环境</q-item-label>
-            <q-item-label caption>此设置无法在网页端修改，详情请查阅GitHub Wiki中关于配置文件的说明</q-item-label>
+            <q-item-label>운영 환경</q-item-label>
+            <q-item-label caption>이 설정은 웹에서 변경할 수 없습니다. 자세한 내용은 GitHub Wiki의 설정 파일 안내를 확인하세요.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -357,14 +357,14 @@
 
     <q-card class="q-ma-md">
       <q-toolbar>
-        <q-toolbar-title>其它设置</q-toolbar-title>
+        <q-toolbar-title>기타 설정</q-toolbar-title>
       </q-toolbar>
 
       <q-list>
         <q-item style="height: 70px;">
           <q-item-section>
-            <q-item-label>检查更新</q-item-label>
-            <q-item-label caption>打开网页时是否检查更新</q-item-label>
+            <q-item-label>업데이트 확인</q-item-label>
+            <q-item-label caption>페이지를 열 때 업데이트를 확인합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -374,8 +374,8 @@
 
         <q-item v-if="config.checkUpdate">
           <q-item-section>
-            <q-item-label>检查测试版更新</q-item-label>
-            <q-item-label caption>是否检查测试版更新</q-item-label>
+            <q-item-label>시험판 업데이트 확인</q-item-label>
+            <q-item-label caption>시험판 업데이트도 확인합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -385,8 +385,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>数据库使用默认路径</q-item-label>
-            <q-item-label caption>使用程序所在位置下的sqlite文件夹，并忽略databaseFolderDir设置（如无必要请勿修改，更改此设置需要重启程序）</q-item-label>
+            <q-item-label>데이터베이스 기본 경로 사용</q-item-label>
+            <q-item-label caption>프로그램 폴더의 sqlite를 사용하며 databaseFolderDir 설정을 무시합니다. 변경 후 재시작해야 합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -396,8 +396,8 @@
 
         <q-item>
           <q-item-section>
-            <q-item-label>封面使用默认路径</q-item-label>
-            <q-item-label caption>使用程序所在位置下的covers文件夹，并忽略封面文件夹路径设置</q-item-label>
+            <q-item-label>표지 기본 경로 사용</q-item-label>
+            <q-item-label caption>프로그램 폴더의 covers를 사용하며 표지 폴더 경로 설정을 무시합니다.</q-item-label>
           </q-item-section>
 
           <q-item-section avatar>
@@ -408,7 +408,7 @@
     </q-card>
 
     <div class="q-ma-lg row justify-end">
-      <q-btn :loading="loading" label="保存" type="submit" color="primary" />
+      <q-btn :loading="loading" label="저장" type="submit" color="primary" />
     </div>
   </q-form>
 </template>
@@ -505,3 +505,26 @@ export default {
   }
 }
 </script>
+
+<style>
+@media (max-width: 599px) {
+  .advanced-settings .q-item {
+    height: auto !important;
+    min-height: 70px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .advanced-settings .q-item__section--side {
+    min-width: 0;
+    padding-left: 0;
+    align-self: stretch;
+  }
+
+  .advanced-settings .q-item .q-gutter-sm {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+</style>

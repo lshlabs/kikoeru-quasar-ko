@@ -1,20 +1,20 @@
 <template>
   <q-page padding>
     <div class="fit row wrap justify-between items-start q-px-sm">
-      <div class="col-lg-3 col-sm-12 col-xs-12">
+      <div class="col-lg-3 col-sm-12 col-xs-12 favourites-toggle-scroll">
           <q-btn-toggle
             v-model="mode"
             @input="changeMode"
-            spread
             no-caps
             rounded
             toggle-color="primary"
             class="text-bold outline-style"
+            style="width: max-content; white-space: nowrap;"
             :options="[
-              {label: '播放历史', value: 'histroy'},
-              {label: '我的评价', value: 'review'},
-              {label: '我的进度', value: 'progress'},
-              {label: '分类整理', value: 'folder'},
+              {label: '재생 기록', value: 'histroy'},
+              {label: '내 평가', value: 'review'},
+              {label: '감상 상태', value: 'progress'},
+              {label: '분류별 정리', value: 'folder'},
             ]"
           />
       </div>
@@ -38,7 +38,7 @@
     <!-- 进度选项，仅在我的进度tab选项中显示-->
     <div
       v-if="mode === 'progress'"
-      class="q-px-sm q-pt-md"
+      class="q-px-sm q-pt-md favourites-toggle-scroll"
     >
       <q-btn-toggle
         v-model="progressFilter"
@@ -46,12 +46,13 @@
         toggle-color="primary"
         rounded
         class="outline-style"
+        style="width: max-content; white-space: nowrap;"
         :options="[
-          {label: '想听', value: 'marked'},
-          {label: '在听', value: 'listening'},
-          {label: '听过', value: 'listened'},
-          {label: '重听', value: 'replay'},
-          {label: '搁置', value: 'postponed'}
+          {label: '듣고 싶음', value: 'marked'},
+          {label: '듣는 중', value: 'listening'},
+          {label: '들은 작품', value: 'listened'},
+          {label: '다시 듣기', value: 'replay'},
+          {label: '보류', value: 'postponed'}
         ]"
       />
     </div>
@@ -60,7 +61,7 @@
     <div>
       <div class="q-px-sm q-pt-md">
         <q-infinite-scroll @load="onLoad" :offset="500" :disable="stopLoad" ref="scroll" v-if="mode !=='folder'">
-          <div class="row justify-center text-grey" v-if="works.length === 0">在作品界面上点击星标、标记进度，标记的音声就会出现在这里啦</div>
+          <div class="row justify-center text-grey" v-if="works.length === 0">작품에서 별점을 주거나 감상 상태를 표시하면 여기에 나타납니다.</div>
           <q-list bordered separator class="shadow-2" v-if="works.length">
              <FavListItem v-for="work in works" :key="work.id" :workid="work.id" :metadata="work" @reset="reset()" :mode="mode"></FavListItem> 
           </q-list>
@@ -71,7 +72,7 @@
           </template>
         </q-infinite-scroll>
 
-        <div v-else class="row justify-center text-grey">尚未实现，敬请期待</div>
+        <div v-else class="row justify-center text-grey">아직 지원하지 않는 기능입니다.</div>
       </div>
     </div>
   </q-page>
@@ -120,36 +121,36 @@ export default {
       pagination: { currentPage:0, pageSize:12, totalCount:0 },
       sortMode: 'desc',
       sortBy: {
-          label: '标记时间',
+          label: '표시한 날짜',
           order: 'updated_at'
         },
       sortOptions: [
         {
-          label: '标记时间',
+          label: '표시한 날짜',
           order: 'updated_at'
         },
         {
-          label: '评价',
+          label: '평가',
           order: 'userRating'
         },
         {
-          label: '发布时间',
+          label: '발매일',
           order: 'release'
         },
         {
-          label: '评论数量',
+          label: '리뷰 수',
           order: 'review_count'
         },
         {
-          label: '售出数量',
+          label: '판매량',
           order: 'dl_count'
         },
         {
-          label: '全年龄新作',
+          label: '전연령 신작',
           order: 'allage'
         },
         {
-          label: '18禁新作',
+          label: '성인용 신작',
           order: 'nsfw'
         }
       ]
@@ -279,6 +280,15 @@ export default {
 </script>
 
 <style scoped>
+.favourites-toggle-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.favourites-toggle-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
 .outline-style {
   border: 1px solid var(--q-color-primary);
 }

@@ -614,7 +614,7 @@ export default {
       this.$router.push(`/work/${this.workid}`);
     } else if (this.workid === undefined && this.playWorkId === 0) {
       this.$q.notify({
-        message: "当前没有播放任何作品，请先播放一个作品然后打开可视化页面",
+        message: "재생 중인 작품이 없습니다. 작품을 재생한 뒤 전체 화면 플레이어를 여세요.",
         color: "negative",
       });
       this.$router.push(`/works`);

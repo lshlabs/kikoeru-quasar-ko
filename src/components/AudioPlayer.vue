@@ -59,7 +59,7 @@
               @click="showCurrentPlayList = !showCurrentPlayList" 
             >
               <q-tooltip anchor="top middle" self="bottom middle">
-                切换曲目
+                곡 목록
               </q-tooltip>
             </q-btn>
 
@@ -75,7 +75,7 @@
               @click="onSetEnableVideoSourcePIP(!enableVideoSourcePIP)" 
             >
             <q-tooltip anchor="top middle" self="bottom middle">
-              视频画中画
+              영상 화면 속 화면
             </q-tooltip>
             </q-btn>
 
@@ -91,7 +91,7 @@
               @click="setPIPLyrics" 
             >
               <q-tooltip anchor="top middle" self="bottom middle">
-                桌面歌词
+                데스크톱 자막
               </q-tooltip>
             </q-btn>
 
@@ -119,7 +119,7 @@
               @click="gotoFullScreenPlayer"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
-                网页全屏
+                전체 화면
               </q-tooltip>
             </q-btn>
 
@@ -134,7 +134,7 @@
               @click="flipCover"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
-                音效均衡器
+                오디오 이퀄라이저
               </q-tooltip>
             </q-btn>
 
@@ -147,7 +147,7 @@
               icon="more_horiz"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
-                更多播放设置
+                재생 설정 더 보기
               </q-tooltip>
               <q-menu anchor="bottom right" self="top right">
                 <q-item clickable v-ripple @click="hideSeekButton = !hideSeekButton">
@@ -156,7 +156,7 @@
                   </q-item-section>
 
                   <q-item-section>
-                    隐藏封面按钮
+                    표지 버튼 숨기기
                   </q-item-section>
                 </q-item>
                 
@@ -165,7 +165,7 @@
                     <q-icon :name="swapSeekButton ? 'done' : ''" />
                   </q-item-section>
                   <q-item-section>
-                    交换进度按钮与切换按钮
+                    탐색 버튼과 곡 전환 버튼 위치 바꾸기
                   </q-item-section>
                 </q-item>
                 
@@ -174,7 +174,7 @@
                     <!-- placeholder -->
                   </q-item-section>
                   <q-item-section>
-                    打开作品详情（或双击封面）
+                    작품 상세 열기 (표지를 두 번 클릭)
                   </q-item-section>
                 </q-item>
                 
@@ -183,7 +183,7 @@
                     <q-icon :name="enableVisualizer ? 'done' : ''" />
                   </q-item-section>
                   <q-item-section>
-                    开启音频可视化（需要刷新页面）
+                    오디오 시각화 켜기 (새로고침 필요)
                   </q-item-section>
                 </q-item>
                 
@@ -192,7 +192,7 @@
                     <q-icon :name="enableVideoSource ? 'done' : ''" />
                   </q-item-section>
                   <q-item-section>
-                    视频源绘制功能（需要刷新页面）
+                    영상 소스 표시 (새로고침 필요)
                   </q-item-section>
                 </q-item>
 
@@ -203,7 +203,7 @@
                       :value="lyricOffsetSeconds"
                       @input="lyricOffsetChange"
                       type="number"
-                      prefix="歌词偏移"
+                      prefix="자막 시간 차이"
                       suffix="s"
                       style="max-width: 100%;"
                       outlined
@@ -332,29 +332,29 @@
     <q-dialog v-model="lyricSyncDialog"  seamless position="top">
       <q-card class="bg-primary text-white">
         <q-card-section>
-          <div class="text-h6">歌词同步辅助工具</div>
+          <div class="text-h6">자막 싱크 맞추기</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          这是一个辅助计算歌词偏移量的工具，当音频和歌词的时间出现不同步的时候，使用此工具来计算修复的歌词偏移量。
-          请在正常播放状态下播放音频和歌词，从声音和歌词中找到一个关键点A，对应声音A和歌词A，
-          判断先听到声音还是先看到歌词，当其中一个出现时，点击下方对应的按钮，接着在另一个元素出现时再次点击一次按钮。
-          这里将会计算两次点击之间的时间差，点击“应用偏移量”即可立即刚才两次点击的时间差作为歌词偏移量。
+          오디오와 자막의 싱크가 맞지 않을 때 필요한 시간 차이를 계산합니다.
+          오디오와 자막을 재생하며 서로 대응하는 지점을 찾으세요.
+          소리와 자막 중 먼저 나온 쪽의 버튼을 누르고, 다른 쪽이 나오면 다시 버튼을 누르세요.
+          두 번 누른 시간 차이를 계산합니다. ‘시간 차이 적용’을 누르면 자막 싱크에 바로 반영됩니다.
         </q-card-section>
 
         <q-card-section v-if="fixState === 'ready'">
-          <q-btn @click="startFixLyricSync('lyric')">歌词先出现了</q-btn>
-          <q-btn @click="startFixLyricSync('audio')">先听到了声音</q-btn>
+          <q-btn @click="startFixLyricSync('lyric')">자막이 먼저 나왔어요</q-btn>
+          <q-btn @click="startFixLyricSync('audio')">소리가 먼저 들렸어요</q-btn>
         </q-card-section>
 
         <q-card-section v-if="fixState === 'measure'">
-          <q-btn @click="stopFixLyricSync">{{ fixWhoStartFirst == "audio" ? "歌词这个时候出现了" : "这个时候才听到了声音" }}</q-btn>
+          <q-btn @click="stopFixLyricSync">{{ fixWhoStartFirst == "audio" ? "이제 자막이 나왔어요" : "이제 소리가 들렸어요" }}</q-btn>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn @click="lyricSyncDialog = false">关闭</q-btn>
-          <q-btn v-if="fixState !== 'ready'" @click="fixState = 'ready'" >重新计量偏移量</q-btn>
-          <q-btn v-if="fixState === 'done'" @click="fixApply">应用偏移量 {{ showDeltaSeconds }}</q-btn>
+          <q-btn @click="lyricSyncDialog = false">닫기</q-btn>
+          <q-btn v-if="fixState !== 'ready'" @click="fixState = 'ready'" >시간 차이 다시 측정</q-btn>
+          <q-btn v-if="fixState === 'done'" @click="fixApply">시간 차이 적용 {{ showDeltaSeconds }}</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -546,13 +546,13 @@ export default {
     playModeString () {
       switch (this.playMode.name) {
         case "all repeat":
-          return "全部"
+          return "전체 반복"
         case "repeat once":
-          return "单曲循环"
+          return "한 곡 반복"
         case "shuffle":
-          return "随机"
+          return "무작위 재생"
         default:
-          return "列表播放"
+          return "목록 순서대로"
       }
     },
 
@@ -643,7 +643,7 @@ export default {
       this.lyricOffsetChange(this.fixDeltaMills / 1000);
       this.lyricSyncDialog = false;
       this.fixState = "ready";
-      this.$q.notify({message: `歌词偏移量(${this.fixDeltaMills/1000}s)已应用`, timeout: 500})
+      this.$q.notify({message: `자막 시간 차이 ${this.fixDeltaMills/1000}초를 적용했습니다.`, timeout: 500})
     },
 
     ...mapMutations('AudioPlayer', {
@@ -732,7 +732,7 @@ export default {
 
     setPIPLyrics() {
       if (!this.enablePIPLyrics) {
-        this.$q.notify({message: "创建桌面歌词组件中，请稍等...", timeout: 500})
+        this.$q.notify({message: "데스크톱 자막을 여는 중입니다...", timeout: 500})
       }
       this.setEnablePIPLyrics(!this.enablePIPLyrics)
     },
@@ -758,7 +758,7 @@ export default {
 
       // 尚处于恢复历史记录的阶段，为了避免此时将空状态写入远程服务器覆盖有效状态，跳过本次历史更新
       if (!this.resumeHistroyDone) {
-        console.log("尚处于恢复历史记录的状态，跳过本次历史更新")
+      console.log("재생 기록을 복원하는 중이므로 이번 기록 업데이트를 건너뜀")
         return
       }
 
@@ -773,13 +773,13 @@ export default {
 
       // 检查最近一次的历史更新记录，如果两次数据不变，则无需更新记录
       if (this.isSameTwoHistory(this.latestUpdatedHistory, data)) {
-        console.log("播放状态未变，跳过服务器历史更新")
+      console.log("재생 상태가 그대로여서 서버 기록 업데이트를 건너뜀")
         return
       }
 
       this.$axios.put('/api/histroy', data)
         .then((_) => {
-          console.log("更新播放状态成功")
+      console.log("재생 상태 업데이트 완료")
           this.latestUpdatedHistory = data;
         })
         .catch((err) => {
@@ -798,8 +798,8 @@ export default {
 
       // 打开的话，需要提示一些用户信息
       this.$q.dialog({
-        title: '注意',
-        message: '开启视频源绘制功能会增加性能开销，移动设备上可能会发热严重，请谨慎选择。此外，在iOS safari系统中，safari会强制将页面中正在播放的视频元素设置为画中画模式，无法规避，建议iOS safari环境下关闭此项功能',
+        title: '주의',
+        message: '영상 소스 표시 기능은 기기 성능에 부담을 주며 모바일 기기가 뜨거워질 수 있습니다. iOS Safari에서는 재생 중인 영상이 자동으로 화면 속 화면으로 전환될 수 있으므로 이 기능을 끄는 것이 좋습니다.',
         cancel: true,
       }).onOk(() => {
         this.toggleEnableVideoSource()
@@ -839,9 +839,9 @@ export default {
     // 当发生特定配置改动，需要用户刷新页面时，通过这个通知来提示用户
     suggestRefreshPage() {
       this.$q.notify({
-        message: "配置已更改，建议刷新页面",
+        message: "설정이 바뀌었습니다. 페이지를 새로고침하세요.",
         actions: [
-          { label: "立即刷新",
+          { label: "지금 새로고침",
             handler: () => {
               // this.$router.push(`/fullScreenPlayer/${this.playWorkId}`)
               // this.$router.push(`/fullScreenPlayer`)

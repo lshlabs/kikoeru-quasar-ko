@@ -58,12 +58,12 @@
 
         <div v-if="mode === 'histroy'" class="full-width">
           <div class="full-width">
-            <q-btn color="primary" label="从历史播放"  class="full-width" @click="playHistroy(metadata.id, metadata.state)"/>
+            <q-btn color="primary" label="기록에서 이어 듣기"  class="full-width" @click="playHistroy(metadata.id, metadata.state)"/>
           </div>
 
           <!--
           <div>
-            <span class="text-accent">历史：</span>
+            <span class="text-accent">재생 기록:</span>
               <q-badge color="blue">
                 {{ metadata.play_updated_at }}
               </q-badge>
@@ -71,7 +71,7 @@
           -->
 
           <div>
-            <span class="text-accent">进度：</span>
+            <span class="text-accent">진행:</span>
             <q-badge color="purple">{{ metadata.state.index+1 }} / {{ metadata.state.queue.length }}</q-badge>
             <q-badge color="blue">{{ humanReadableSeconds(metadata.state.seconds) }}</q-badge>
             <span class="text-grey">
@@ -93,11 +93,11 @@
             text-color="black"
             class="q-pa-sm"
             :options="[
-              {label: '想听', value: 'marked'},
-              {label: '在听', value: 'listening'},
-              {label: '听过', value: 'listened'},
-              {label: '重听', value: 'replay'},
-              {label: '搁置', value: 'postponed'}
+              {label: '듣고 싶음', value: 'marked'},
+              {label: '듣는 중', value: 'listening'},
+              {label: '들은 작품', value: 'listened'},
+              {label: '다시 듣기', value: 'replay'},
+              {label: '보류', value: 'postponed'}
             ]"
           />
           </q-item-label>
@@ -172,9 +172,9 @@ export default {
       const sec = Math.floor(seconds) % 60
 
       let str = ""
-      if (hour > 0) str += `${hour}小时`
-      if (minute > 0) str += `${minute}分钟`
-      str += `${sec}秒`
+      if (hour > 0) str += `${hour}시간`
+      if (minute > 0) str += `${minute}분`
+      str += `${sec}초`
       return str
     },
 

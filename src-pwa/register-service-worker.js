@@ -32,12 +32,12 @@ register(process.env.SERVICE_WORKER_FILE, {
   updated (/* registration */) {
     console.log('New content is available; please refresh.')
     Notify.create({
-      message: '版本已更新',
+      message: '새 버전이 설치되었습니다.',
       color: 'primary',
       textColor: 'white',
       icon: 'cached',
       actions: [
-        { label: '刷新', color: 'white' }
+        { label: '새로고침', color: 'white' }
       ],
       timeout: 10000,
       onDismiss () {

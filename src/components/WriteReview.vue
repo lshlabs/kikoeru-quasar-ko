@@ -3,7 +3,7 @@
       <q-dialog v-model="showReviewDialog" @hide="closeDialog">
         <q-card>
           <q-card-section class="q-pb-sm">
-            <div class="text-body1">我的评论</div>
+            <div class="text-body1">내 리뷰</div>
           </q-card-section>
 
           <q-card-section class="q-pt-none">
@@ -27,11 +27,11 @@
               color="white"
               text-color="primary"
               :options="[
-                {label: '想听', value: 'marked'},
-                {label: '在听', value: 'listening'},
-                {label: '听过', value: 'listened'},
-                {label: '重听', value: 'replay'},
-                {label: '搁置', value: 'postponed'}
+                {label: '듣고 싶음', value: 'marked'},
+                {label: '듣는 중', value: 'listening'},
+                {label: '들은 작품', value: 'listened'},
+                {label: '다시 듣기', value: 'replay'},
+                {label: '보류', value: 'postponed'}
               ]"
             />
           </q-card-section>
@@ -48,12 +48,12 @@
           
           <div class="row justify-between">
             <q-card-actions  class="text-red">
-              <q-btn flat label="删除标记" v-close-popup @click="deleteConfirm = true" />
+              <q-btn flat label="표시 삭제" v-close-popup @click="deleteConfirm = true" />
             </q-card-actions>
 
             <q-card-actions align="right" class="text-primary">
-              <q-btn flat label="确定" v-close-popup @click="submitReview()" />
-              <q-btn flat label="取消" v-close-popup @click="closeDialog()" />
+              <q-btn flat label="확인" v-close-popup @click="submitReview()" />
+              <q-btn flat label="취소" v-close-popup @click="closeDialog()" />
             </q-card-actions>
           </div>
         </q-card>
@@ -62,12 +62,12 @@
       <q-dialog v-model="deleteConfirm" persistent transition-show="scale" transition-hide="scale">
         <q-card class="bg-teal text-white" style="width: 300px">
           <q-card-section>
-            <div class="text-h6">确定要删除标记吗</div>
+            <div class="text-h6">표시를 삭제하시겠습니까?</div>
           </q-card-section>
 
           <q-card-actions align="right" class="text-teal">
-              <q-btn flat label="确定" v-close-popup @click="deleteReview()" />
-              <q-btn flat label="取消" v-close-popup @click="closeDialog()"/>
+              <q-btn flat label="확인" v-close-popup @click="deleteReview()" />
+              <q-btn flat label="취소" v-close-popup @click="closeDialog()"/>
           </q-card-actions>
         </q-card>
       </q-dialog>

@@ -36,9 +36,9 @@
 
           <!-- 评价分布明细 -->
           <q-tooltip content-class="text-subtitle1" v-if=metadata.rate_count_detail>
-            <div>平均: {{ metadata.rate_average_2dp }}</div>
+            <div>평균: {{ metadata.rate_average_2dp }}</div>
             <div v-for="(rate, index) in sortedRatings" :key=index class="row items-center">
-              <div class="col">{{ rate.review_point }}星</div>
+              <div class="col">{{ rate.review_point }}점</div>
 
               <!-- 评价占比 -->
               <q-linear-progress
@@ -74,9 +74,9 @@
 
       <!-- 价格&售出数 -->
       <div v-show="metadata.title">
-        <span class="q-mx-sm text-weight-medium text-h6 text-red">{{ metadata.price }} 日元</span>
-        <span>售出数: {{ metadata.dl_count }}</span>
-        <span v-if="!metadata.nsfw" class="q-mx-sm" style="background: #e6f7d6; color: #56842a">全年龄</span>
+        <span class="q-mx-sm text-weight-medium text-h6 text-red">{{ metadata.price }} 엔</span>
+        <span>판매량: {{ metadata.dl_count }}</span>
+        <span v-if="!metadata.nsfw" class="q-mx-sm" style="background: #e6f7d6; color: #56842a">전연령</span>
       </div>
 
       <!-- 标签 -->

@@ -42,9 +42,9 @@
 
             <!-- 评价分布明细 -->
             <q-tooltip v-if=metadata.rate_count_detail content-class="text-subtitle1">
-              <div>平均: {{metadata.rate_average_2dp}}</div>
+              <div>평균: {{metadata.rate_average_2dp}}</div>
               <div v-for="(rate, index) in sortedRatings" :key=index class="row items-center">
-                <div class="col"> {{rate.review_point}}星 </div>
+                <div class="col"> {{rate.review_point}}점 </div>
 
                 <!-- 评价占比 -->
                 <q-linear-progress
@@ -78,7 +78,7 @@
 
       <!-- 价格&售出数 -->
       <div class="q-pt-sm q-pb-none">
-        <span class="q-mx-sm text-weight-medium text-h6 text-red">{{metadata.price}} 日元</span> 售出数: {{metadata.dl_count}}
+        <span class="q-mx-sm text-weight-medium text-h6 text-red">{{metadata.price}} 엔</span> 판매량: {{metadata.dl_count}}
       </div>
 
       <!-- 标签 -->
@@ -111,7 +111,7 @@
         dense
         class="q-mt-sm shadow-4 q-mx-xs q-pl-sm"
         color="cyan"
-        label="标记进度"
+        label="감상 상태 표시"
       >
         <q-list>
           <q-item clickable @click="setProgress('marked')" class="q-pa-xs">
@@ -119,7 +119,7 @@
               <q-avatar icon="headset" v-show="progress === 'marked'" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>想听</q-item-label>
+              <q-item-label>듣고 싶음</q-item-label>
             </q-item-section>
           </q-item>
 
@@ -128,7 +128,7 @@
               <q-avatar icon="headset" v-show="progress === 'listening'" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>在听</q-item-label>
+              <q-item-label>듣는 중</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable @click="setProgress('listened')" class="q-pa-xs">
@@ -136,7 +136,7 @@
               <q-avatar icon="headset" v-show="progress === 'listened'" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>听过</q-item-label>
+              <q-item-label>들은 작품</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable @click="setProgress('replay')" class="q-pa-xs">
@@ -144,7 +144,7 @@
               <q-avatar icon="headset" v-show="progress === 'replay'" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>重听</q-item-label>
+              <q-item-label>다시 듣기</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable @click="setProgress('postponed')" class="q-pa-xs">
@@ -152,24 +152,24 @@
               <q-avatar icon="headset" v-show="progress === 'postponed'" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>搁置</q-item-label>
+              <q-item-label>보류</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
       </q-btn-dropdown>
 
-      <q-btn dense @click="showReviewDialog = true" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="写评论" />
+      <q-btn dense @click="showReviewDialog = true" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="리뷰 작성" />
 
-      <q-btn v-if="metadata.state && playWorkId !== metadata.id" dense @click="resumeThisHistroy" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="播放此作品的历史记录" />
-      <q-btn v-if="metadata.state" dense @click="clearThisHistroy" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="删除播放记录">
-        <q-tooltip>当历史记录中有已被删除的音频文件，可能会无法正确播放文件，可通过此按钮解决</q-tooltip>
+      <q-btn v-if="metadata.state && playWorkId !== metadata.id" dense @click="resumeThisHistroy" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="이 작품의 재생 기록 이어 듣기" />
+      <q-btn v-if="metadata.state" dense @click="clearThisHistroy" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="재생 기록 삭제">
+        <q-tooltip>재생 기록에 삭제된 오디오 파일이 있으면 정상 재생되지 않을 수 있습니다. 이 버튼으로 기록을 지울 수 있습니다.</q-tooltip>
       </q-btn>
 
-      <q-btn dense @click="$emit('translateCwd')" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="翻译当前目录音频">
-        <q-tooltip>不包括递归的子目录音频</q-tooltip>
+      <q-btn dense @click="$emit('translateCwd')" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="현재 폴더의 오디오 번역">
+        <q-tooltip>하위 폴더의 오디오는 포함되지 않습니다.</q-tooltip>
       </q-btn>
 
-      <q-btn dense @click="scanWorkFile" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="扫描本地文件" />
+      <q-btn dense @click="scanWorkFile" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="로컬 파일 스캔" />
 
       <WriteReview v-if="showReviewDialog" @closed="processReview" :workid="metadata.id" :metadata="metadata"></WriteReview>
     </div>
@@ -316,17 +316,17 @@ export default {
 
     clearThisHistroy() {
       this.$q.dialog({
-        title: '注意',
-        message: '确定要删除这个作品的播放历史吗？',
-        cancel: "取消",
-        ok: "确定"
+        title: '주의',
+        message: '이 작품의 재생 기록을 삭제하시겠습니까?',
+        cancel: "취소",
+        ok: "확인"
       }).onOk(async () => {
         this.$axios.delete('/api/histroy', { data: { work_id: this.metadata.id } })
           .then((_) => {
-            this.$q.notify("删除历史成功")
+            this.$q.notify("재생 기록을 삭제했습니다.")
           })
           .catch((err) => {
-            this.$q.notify("删除历史失败：", err.message)
+            this.$q.notify("재생 기록을 삭제하지 못했습니다:", err.message)
             console.error(err)
           })
       })

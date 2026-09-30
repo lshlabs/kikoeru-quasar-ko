@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <div class="text-h5">均衡器</div>
+    <div class="text-h5">이퀄라이저</div>
     <q-toggle
       :disable="disable"
       v-model="isFlipLeftRightChannel"
       color="primary"
       :icon="isFlipLeftRightChannel ? 'sync_alt' : 'headphones'"
-      label="左右声道交换"
+      label="좌우 채널 바꾸기"
     />
   </div>
 </template>

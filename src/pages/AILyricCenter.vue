@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="text-h5 text-weight-regular q-ma-md">
-      AI 歌词中心
+      AI 자막 작업
     </div>
     <div class="row">
-      <q-input class="col col-sm-12 q-pa-sm" dense outlined v-model="filterWorkId" label="搜索作品id" type="number">
+      <q-input class="col col-sm-12 q-pa-sm" dense outlined v-model="filterWorkId" label="작품 ID 검색" type="number">
         <template v-slot:prepend>
           RJ
         </template>
       </q-input>
-      <q-input class="col col-sm-12 q-pa-sm" dense outlined v-model="filterFileName" label="搜索文件名">
+      <q-input class="col col-sm-12 q-pa-sm" dense outlined v-model="filterFileName" label="파일 이름 검색">
       </q-input>
 
       <!-- 字幕筛选 -->
@@ -22,14 +22,14 @@
         v-model="statusOption"
         :options="statusOptions"
         :option-label="readableStatus"
-        label="状态筛选"
+        label="상태 필터"
         clearable
         multiple
       />
     </div>
 
     <!-- 刷新 -->
-    <q-btn @click="resetLoadedData" class="full-width" color="primary">刷新</q-btn>
+    <q-btn @click="resetLoadedData" class="full-width" color="primary">새로고침</q-btn>
     <!--<q-toggle v-model="autoRefresh" :label="autoRefresh ? '自动刷新' : '关闭自动刷新'" />-->
 
     <!--任务列表-->
@@ -41,9 +41,9 @@
                 <q-avatar color="primary">id</q-avatar>
                 {{ task.id }}
               </q-chip>
-              <q-item-section avatar @click.prevent.stop="copyToClipboard(task.id, `任务id '${task.id}'`)">
+              <q-item-section avatar @click.prevent.stop="copyToClipboard(task.id, `작업 ID '${task.id}'`)">
                 <q-img transition="fade" :src="samCoverUrl(task.work_id)" style="height: 38px; width: 38px" class="rounded-borders" />
-                <q-tooltip>点击复制任务id</q-tooltip>
+                <q-tooltip>클릭하여 작업 ID 복사</q-tooltip>
               </q-item-section>
               <q-item-section side>
                 <q-item-label>{{ readableStatus(task.status) }}</q-item-label>
@@ -66,11 +66,11 @@
                 <q-item-label caption>{{ task.worker_status }}</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn @click="openWorkDetail(task.work_id)" dense class="full-height">打开作品详情</q-btn>
+                <q-btn @click="openWorkDetail(task.work_id)" dense class="full-height">작품 상세 열기</q-btn>
               </q-item-section>
               <q-item-section side>
-                <q-btn @click="deleteTask(task.id)" class="text-negative" dense>删除</q-btn>
-                <q-btn v-if="task.status >= AILyricTaskStatus.PENDING" @click="redoTask(task.id)" dense>重试</q-btn>
+                <q-btn @click="deleteTask(task.id)" class="text-negative" dense>삭제</q-btn>
+                <q-btn v-if="task.status >= AILyricTaskStatus.PENDING" @click="redoTask(task.id)" dense>재시도</q-btn>
               </q-item-section>
             </q-item>
           </q-list>
@@ -194,24 +194,24 @@ export default {
     readableStatus(status) {
       switch(status) {
         case AILyricTaskStatus.NONE:
-          return "非法状态";
+          return "잘못된 상태";
         case AILyricTaskStatus.PENDING:
-          return "待执行";
+          return "대기 중";
         case AILyricTaskStatus.TRASCRIPTING:
-          return "翻译中";
+          return "번역 중";
         case AILyricTaskStatus.SUCCESS:
-          return "成功";
+          return "성공";
         case AILyricTaskStatus.ERROR:
-          return "失败";
+          return "실패";
       }
     },
 
     async deleteTask(taskId) {
       this.$q.dialog({
-        title: "删除翻译任务",
-        message: "确认要删除翻译任务吗，字幕文件也会被一并删除，且无法恢复。",
-        ok: "删除",
-        cancel: "取消",
+        title: "번역 작업 삭제",
+        message: "번역 작업을 삭제하시겠습니까? 자막 파일도 함께 삭제되며 복구할 수 없습니다.",
+        ok: "삭제",
+        cancel: "취소",
         persistent: false
       }).onOk(async () => {
         await ServerApi.deleteTask(taskId);
@@ -236,7 +236,7 @@ export default {
 
     copyToClipboard(content, hint) {
       copyToClipboard(`${content}`).then(() => {
-        this.$q.notify({message: `已复制${hint}到剪切板`, timeout: 200});
+        this.$q.notify({message: `${hint} 복사 완료`, timeout: 200});
       })
     }
   }

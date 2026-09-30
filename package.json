@@ -1,7 +1,7 @@
 {
   "name": "kikoeru-quasar",
   "version": "0.6.7",
-  "description": "A self-hosted web media player for listening to your DLsite voice works.",
+  "description": "DLsite 음성 작품을 감상하는 개인용 웹 플레이어.",
   "homepage": "https://github.com/kikoeru-project/kikoeru-quasar",
   "productName": "Kikoeru",
   "cordovaId": "org.cordova.quasar.kikoeru",

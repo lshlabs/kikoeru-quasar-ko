@@ -35,7 +35,7 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       iconSet: 'material-icons', // Quasar icon set
-      lang: 'en-us', // Quasar language pack
+      lang: 'ko-kr', // Quasar language pack
 
       // Possible values for "all":
       // * 'auto' - Auto-import needed Quasar components & directives
@@ -146,7 +146,7 @@ module.exports = function (ctx) {
       manifest: {
         name: 'Kikoeru',
         short_name: 'Kikoeru',
-        description: 'A self-hosted web media player for listening to your DLsite voice works.',
+        description: 'DLsite 음성 작품을 감상하는 개인용 웹 플레이어.',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

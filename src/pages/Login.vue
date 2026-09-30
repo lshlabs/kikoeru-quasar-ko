@@ -1,16 +1,16 @@
 <template>
   <q-form @submit="onSubmit" style="width: 260px;" class="absolute-center	q-gutter-md">
-    <q-input filled v-model="name" label="用户名" class="fit"
+    <q-input filled v-model="name" label="사용자 이름" class="fit"
       lazy-rules
-      :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
+      :rules="[ val => val.length >= 5 || '사용자 이름은 5자 이상이어야 합니다.' ]"
     />
     
-    <q-input filled type="password" v-model="password" label="密码"  class="fit"
+    <q-input filled type="password" v-model="password" label="비밀번호"  class="fit"
       lazy-rules
-      :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
+      :rules="[ val => val.length >= 5 || '비밀번호는 5자 이상이어야 합니다.' ]"
     />
 
-    <q-btn label="登录" type="submit" color="primary" class="fit" />
+    <q-btn label="로그인" type="submit" color="primary" class="fit" />
   </q-form>
 </template>
    
@@ -38,7 +38,7 @@ export default {
           try {
             this.$q.localStorage.set('jwt-token', res.data.token)
             setAxiosHeaders(res.data.token)
-            this.showSuccNotif('登录成功.')
+            this.showSuccNotif('로그인했습니다.')
             this.$router.push('/')
           } catch (error) {
             // 由于Web Storage API错误，
