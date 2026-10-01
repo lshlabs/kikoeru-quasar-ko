@@ -68,6 +68,7 @@
       <q-btn flat size="lg" :icon="swapSeekButton ? rewindIcon : 'skip_previous'" @click.prevent.stop="swapSeekButton ? rewind(true) : previousTrack()" style="height: 60px; width: 60px" class="col-auto gt-xs"/>
       <q-btn flat size="lg" :icon="playingIcon" @click.prevent.stop="togglePlaying()" style="height: 60px; width: 60px" class="col-auto" />
       <q-btn flat size="lg" :icon="swapSeekButton ? forwardIcon : 'skip_next'" @click.prevent.stop="swapSeekButton ? forward(true) : nextTrack()" style="height: 60px; width: 60px" class="col-auto gt-xs"/>
+      <q-btn flat size="lg" icon="close" aria-label="플레이어 종료" title="플레이어 종료" @click.prevent.stop="closePlayer()" style="height: 60px; width: 60px" class="col-auto" />
     </div>
   </q-card >
 </template>
@@ -239,6 +240,7 @@ export default {
       togglePlaying: 'TOGGLE_PLAYING',
       nextTrack: 'NEXT_TRACK',
       previousTrack: 'PREVIOUS_TRACK',
+      emptyQueue: 'EMPTY_QUEUE',
       // changePlayMode: 'CHANGE_PLAY_MODE',
       // setVolume: 'SET_VOLUME',
       rewind: 'SET_REWIND_SEEK_MODE',
@@ -248,6 +250,17 @@ export default {
 
     showAudioPlayer() {
       if (this.hide) this.toggleHide()
+    },
+
+    closePlayer () {
+      this.$q.dialog({
+        title: '플레이어 종료',
+        message: '재생을 종료할까요?',
+        cancel: '취소',
+        ok: '종료'
+      }).onOk(() => {
+        this.emptyQueue()
+      })
     },
 
     startPanning(x, y) {

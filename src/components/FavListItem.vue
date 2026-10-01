@@ -10,12 +10,13 @@
       <q-item-section class="q-gutter-y-xs column items-start" top v-on:click.self="showReviewDialog = true && mode != 'histroy' ">
         <q-item-label lines="2" class="text-body2">
           <router-link :to="`/work/${metadata.id}`" class="col-auto text-secondary">
-            {{metadata.title}}
+            {{ workDisplayTitle(metadata) }}
           </router-link>
         </q-item-label>
 
         <div class="row q-gutter-x-sm col-auto" >
           <router-link :to="`/works?circleId=${metadata.circle.id}`" class="col-auto text-grey">
+            <q-icon name="groups" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{metadata.circle.name}}
           </router-link>
 
@@ -29,6 +30,7 @@
             :to="`/works?vaId=${va.id}`"
             class="col-auto text-primary"
           >
+            <q-icon name="mic" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{ va.name }}
           </router-link>
         </div>
@@ -111,11 +113,12 @@
 <script>
 import WriteReview from './WriteReview'
 import NotifyMixin from '../mixins/Notification.js'
+import WorkTitleMixin from '../mixins/WorkTitle.js'
 
 export default {
   name: 'FavListItem',
 
-  mixins: [NotifyMixin],
+  mixins: [NotifyMixin, WorkTitleMixin],
 
   components: {
     WriteReview
@@ -264,7 +267,7 @@ export default {
     playHistroy(workId, histroyState) {
       this.$store.commit('AudioPlayer/SET_QUEUE', {
         workId: workId,
-        queue: histroyState.queue,
+        queue: this.workTitleQueue(this.metadata, histroyState.queue),
         index: histroyState.index,
         resetPlaying: false,
         resumeHistroySeconds: histroyState.seconds,

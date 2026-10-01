@@ -37,6 +37,7 @@ export default function () {
     sleepMode: false,
     rewindSeekTime: 5,
     forwardSeekTime: 30,
+    workTitleMode: 'metadata',
     rewindSeekMode: false,
     forwardSeekMode: false,
     swapSeekButton: LocalStorage.has(SWAP_SEEK_BUTTON_KEY) && LocalStorage.getItem(SWAP_SEEK_BUTTON_KEY), // 交换进度按钮与切换按钮

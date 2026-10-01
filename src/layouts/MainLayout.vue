@@ -1,18 +1,18 @@
 <template>
   <q-layout view="hHh Lpr lFf" class="">
     <q-header reveal :reveal-offset="100" @reveal="onHeaderRevealChange" class="shadow-4">
-      <q-toolbar class="row justify-between">
-        <q-btn flat dense round @click="drawerOpen = !drawerOpen" icon="menu" aria-label="메뉴" />
+      <q-toolbar class="main-toolbar">
+        <div class="row items-center no-wrap toolbar-left">
+          <q-btn flat dense round @click="drawerOpen = !drawerOpen" icon="menu" aria-label="메뉴" />
 
-        <q-btn flat size="md" icon="arrow_back_ios" @click="back()" v-if="isNotAtHomePage"/>
+          <q-toolbar-title class="gt-xs toolbar-title">
+            <router-link :to="'/'" class="text-white">
+              Kikoeru
+            </router-link>
+          </q-toolbar-title>
+        </div>
 
-        <q-toolbar-title class="gt-xs">
-          <router-link :to="'/'" class="text-white">
-            Kikoeru
-          </router-link>
-        </q-toolbar-title>
-
-        <q-input v-if="$route.name !== 'advance search'" dark dense rounded standout v-model="keyword" debounce="500" input-class="text-right" class="q-mr-sm">
+        <q-input v-if="$route.name !== 'advance search'" :dark="$q.dark.isActive" dense rounded standout v-model="keyword" debounce="500" input-class="text-right" class="toolbar-search">
           <template v-slot:before>
             <q-btn round dense flat icon="manage_search" to="/search">
               <q-tooltip>여러 검색어로 상세 검색하기</q-tooltip>
@@ -24,6 +24,7 @@
           </template>
         </q-input>
 
+        <q-btn round dense flat icon="arrow_back" @click="back()" v-if="isNotAtHomePage" class="toolbar-back" aria-label="뒤로가기" />
       </q-toolbar>
     </q-header>
 
@@ -278,6 +279,7 @@ export default {
     sharedConfig (config) {
       this.SET_REWIND_SEEK_TIME(config.rewindSeekTime);
       this.SET_FORWARD_SEEK_TIME(config.forwardSeekTime);
+      this.SET_WORK_TITLE_MODE(config.workTitleMode || 'metadata');
     },
   },
 
@@ -317,6 +319,7 @@ export default {
     ...mapMutations('AudioPlayer', [
       'SET_REWIND_SEEK_TIME',
       'SET_FORWARD_SEEK_TIME',
+      'SET_WORK_TITLE_MODE',
       'SET_AI_SERVER_URL',
     ]),
     initUser () {
@@ -473,6 +476,55 @@ export default {
 
 
 <style lang="scss">
+.main-toolbar {
+  position: relative;
+}
+
+.toolbar-left {
+  flex: 0 0 auto;
+}
+
+.toolbar-title {
+  flex: 0 0 auto;
+}
+
+.toolbar-search {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 360px;
+  max-width: calc(100% - 120px);
+}
+
+.toolbar-search .q-field__control {
+  transition: background-color 0.2s ease;
+}
+
+body.body--dark .toolbar-search .q-field__control {
+  background-color: rgba($dark, 0.28);
+}
+
+body:not(.body--dark) .toolbar-search .q-field__control {
+  background-color: rgba(white, 0.2);
+}
+
+.toolbar-back {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 599px) {
+  .toolbar-search {
+    max-width: calc(100% - 104px);
+  }
+}
+
+@media (max-width: 699px) {
+  .toolbar-left .toolbar-title {
+    display: none;
+  }
+}
+
 // 侧边栏底部按钮
   aside.q-drawer div.q-scrollarea > div.scroll > div {
     display: flex;

@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
+  <div class="row work-details-row">
       <CoverSFW 
-        class="col q-ma-sm row justify-start shadow-4"
+        class="col q-ma-sm row justify-start shadow-4 work-details-cover"
         :workid="metadata.id" 
         :nsfw="false" 
         :release="metadata.release" 
@@ -9,18 +9,21 @@
         style="border-radius: 8px; overflow: hidden;"
       />
 
-    <div class="col-md-6 col-12 q-pa-sm">
+    <div class="col-12 col-md q-pa-sm work-details-info">
       <div class="q-px-sm q-py-none">
         <!-- 标题 -->
-        <div class="text-h6 text-weight-regular">
-          <router-link :to="`/work/${metadata.id}`" class="text-secondary">
-            {{metadata.title}}
-          </router-link>
+        <div class="row items-start no-wrap">
+          <div class="text-h6 text-weight-regular col">
+            <router-link :to="`/work/${metadata.id}`" class="text-secondary">
+              {{ workDisplayTitle(metadata) }}
+            </router-link>
+          </div>
         </div>
 
         <!-- 社团名 -->
         <div class="text-subtitle1 text-weight-regular">
           <router-link :to="`/works?circleId=${metadata.circle.id}`" class="text-grey">
+            <q-icon name="groups" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{metadata.circle.name}}
           </router-link>
         </div>
@@ -101,7 +104,8 @@
           :to="`/works?vaId=${va.id}`"
           :key=index
         >
-          <q-chip square size="md" class="shadow-4" color="teal" text-color="white" icon="mic">
+          <q-chip square size="md" class="shadow-4" color="teal" text-color="white">
+            <q-icon name="mic" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{va.name}}
           </q-chip>
         </router-link>
@@ -111,52 +115,54 @@
         dense
         class="q-mt-sm shadow-4 q-mx-xs q-pl-sm"
         color="cyan"
-        label="감상 상태 표시"
+        label="청취 상태"
       >
         <q-list>
           <q-item clickable @click="setProgress('marked')" class="q-pa-xs">
-            <q-item-section avatar>
-              <q-avatar icon="headset" v-show="progress === 'marked'" />
-            </q-item-section>
             <q-item-section>
               <q-item-label>듣고 싶음</q-item-label>
+            </q-item-section>
+            <q-item-section v-if="progress === 'marked'" side>
+              <q-icon name="check" />
             </q-item-section>
           </q-item>
 
           <q-item clickable @click="setProgress('listening')" class="q-pa-xs">
-            <q-item-section avatar>
-              <q-avatar icon="headset" v-show="progress === 'listening'" />
-            </q-item-section>
             <q-item-section>
               <q-item-label>듣는 중</q-item-label>
             </q-item-section>
+            <q-item-section v-if="progress === 'listening'" side>
+              <q-icon name="check" />
+            </q-item-section>
           </q-item>
           <q-item clickable @click="setProgress('listened')" class="q-pa-xs">
-            <q-item-section avatar>
-              <q-avatar icon="headset" v-show="progress === 'listened'" />
-            </q-item-section>
             <q-item-section>
               <q-item-label>들은 작품</q-item-label>
             </q-item-section>
+            <q-item-section v-if="progress === 'listened'" side>
+              <q-icon name="check" />
+            </q-item-section>
           </q-item>
           <q-item clickable @click="setProgress('replay')" class="q-pa-xs">
-            <q-item-section avatar>
-              <q-avatar icon="headset" v-show="progress === 'replay'" />
-            </q-item-section>
             <q-item-section>
               <q-item-label>다시 듣기</q-item-label>
             </q-item-section>
+            <q-item-section v-if="progress === 'replay'" side>
+              <q-icon name="check" />
+            </q-item-section>
           </q-item>
           <q-item clickable @click="setProgress('postponed')" class="q-pa-xs">
-            <q-item-section avatar>
-              <q-avatar icon="headset" v-show="progress === 'postponed'" />
-            </q-item-section>
             <q-item-section>
               <q-item-label>보류</q-item-label>
+            </q-item-section>
+            <q-item-section v-if="progress === 'postponed'" side>
+              <q-icon name="check" />
             </q-item-section>
           </q-item>
         </q-list>
       </q-btn-dropdown>
+
+      <q-btn v-if="userName === 'admin'" dense @click="openCustomTitleEditor" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="제목 편집" />
 
       <q-btn dense @click="showReviewDialog = true" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="리뷰 작성" />
 
@@ -171,6 +177,30 @@
 
       <q-btn dense @click="scanWorkFile" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="로컬 파일 스캔" />
 
+      <q-dialog v-model="showTitleDialog">
+        <q-card style="width: 500px; max-width: 90vw;">
+          <q-card-section>
+            <div class="text-h6">작품 제목 편집</div>
+          </q-card-section>
+
+          <q-card-section>
+            <q-input
+              v-model="customTitleInput"
+              label="사용자 지정 제목"
+              hint="비워 두면 사용자 지정 제목을 삭제합니다."
+              maxlength="300"
+              counter
+              autofocus
+            />
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="취소" v-close-popup />
+            <q-btn color="primary" label="저장" :loading="savingTitle" @click="saveCustomTitle" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
       <WriteReview v-if="showReviewDialog" @closed="processReview" :workid="metadata.id" :metadata="metadata"></WriteReview>
     </div>
   </div>
@@ -180,12 +210,13 @@
 import CoverSFW from 'components/CoverSFW'
 import WriteReview from './WriteReview'
 import NotifyMixin from '../mixins/Notification.js'
+import WorkTitleMixin from '../mixins/WorkTitle.js'
 import { mapState } from 'vuex'
 
 export default {
   name: 'WorkDetails',
 
-  mixins: [NotifyMixin],
+  mixins: [NotifyMixin, WorkTitleMixin],
 
   components: {
     CoverSFW,
@@ -205,7 +236,10 @@ export default {
       userMarked: false,
       progress: '',
       showReviewDialog: false,
-      showTags: true
+      showTags: true,
+      showTitleDialog: false,
+      customTitleInput: '',
+      savingTitle: false
     }
   },
 
@@ -229,6 +263,9 @@ export default {
       'playing',
       'playWorkId'
     ]),
+    ...mapState('User', {
+      userName: 'name'
+    })
   },
 
   watch: {
@@ -251,6 +288,33 @@ export default {
   },
 
   methods: {
+    openCustomTitleEditor () {
+      this.customTitleInput = this.metadata.customTitle || this.workDisplayTitle(this.metadata)
+      this.showTitleDialog = true
+    },
+
+    async saveCustomTitle () {
+      if (this.savingTitle) return
+      this.savingTitle = true
+
+      try {
+        const response = await this.$axios.put(`/api/work/${this.metadata.id}/custom-title`, {
+          customTitle: this.customTitleInput
+        })
+        const customTitle = response.data.customTitle || ''
+        this.$emit('title-updated', customTitle)
+        this.showTitleDialog = false
+        this.$q.notify({ message: '작품 제목을 저장했습니다.', color: 'positive' })
+      } catch (error) {
+        const message = error.response
+          ? (error.response.data.error || `${error.response.status} ${error.response.statusText}`)
+          : (error.message || error)
+        this.showErrNotif(message)
+      } finally {
+        this.savingTitle = false
+      }
+    },
+
     setProgress (newProgress) {
       this.progress = newProgress;
       const submitPayload = {
@@ -346,3 +410,23 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+@media (max-width: 1023px) {
+  .work-details-row {
+    justify-content: center;
+  }
+
+  .work-details-row > .work-details-cover {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .work-details-row > .work-details-info {
+    flex: 0 1 auto;
+    width: fit-content;
+    max-width: 100%;
+  }
+}
+</style>

@@ -42,6 +42,32 @@
     </q-card>
     <q-card class="q-ma-md">
       <q-toolbar>
+        <q-toolbar-title>작품 제목 표시</q-toolbar-title>
+      </q-toolbar>
+
+      <q-list>
+        <q-item>
+          <q-item-section>
+            <q-item-label>표시할 제목</q-item-label>
+            <q-item-label caption>서버에 등록된 모든 사용자에게 적용됩니다. DLsite 원본 제목은 그대로 보존됩니다.</q-item-label>
+          </q-item-section>
+
+          <q-item-section side>
+            <q-select
+              v-model="config.workTitleMode"
+              :options="workTitleModeOptions"
+              emit-value
+              map-options
+              dense
+              outlined
+              class="advanced-settings-select"
+            />
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-card>
+    <q-card class="q-ma-md">
+      <q-toolbar>
         <q-toolbar-title>플레이어 설정</q-toolbar-title>
       </q-toolbar>
 
@@ -84,18 +110,22 @@
       </q-toolbar>
 
       <q-list>
-        <q-item style="height: 70px;">
+        <q-item>
           <q-item-section>
             <q-item-label>태그 수집 언어</q-item-label>
-            <q-item-label caption>DLsite에서 가져올 태그 메타데이터의 언어</q-item-label>
+              <q-item-label caption>DLsite가 제공하는 태그 언어입니다. 작품명·서클명·성우명은 원문으로 유지됩니다. 기존 작품은 서버에서 태그 정보를 갱신해야 적용됩니다.</q-item-label>
           </q-item-section>
 
-          <q-item-section avatar>
-            <div class="q-gutter-sm">
-              <q-radio dense v-model="config.tagLanguage" val="zh-cn" label="중국어 간체" />
-              <q-radio dense v-model="config.tagLanguage" val="zh-tw" label="중국어 번체" />
-              <q-radio dense v-model="config.tagLanguage" val="ja-jp" label="일본어" />
-            </div>
+          <q-item-section side>
+            <q-select
+              v-model="config.tagLanguage"
+              :options="tagLanguageOptions"
+              emit-value
+              map-options
+              dense
+              outlined
+              class="advanced-settings-select"
+            />
           </q-item-section>
         </q-item>
 
@@ -406,10 +436,6 @@
         </q-item>
       </q-list>
     </q-card>
-
-    <div class="q-ma-lg row justify-end">
-      <q-btn :loading="loading" label="저장" type="submit" color="primary" />
-    </div>
   </q-form>
 </template>
 
@@ -428,7 +454,17 @@ export default {
       loading: false,
       rewindSeekTime: '5',
       forwardSeekTime: '30',
-      
+      workTitleModeOptions: [
+        { label: 'DLsite 제목', value: 'metadata' },
+        { label: '폴더명', value: 'folder' },
+        { label: '직접 지정한 제목', value: 'custom' },
+      ],
+      tagLanguageOptions: [
+        { label: '한국어', value: 'ko-kr' },
+        { label: '중국어 간체', value: 'zh-cn' },
+        { label: '중국어 번체', value: 'zh-tw' },
+        { label: '일본어', value: 'ja-jp' },
+      ],
     }
   },
 
@@ -467,15 +503,19 @@ export default {
       this.config.forwardSeekTime = parseInt(this.forwardSeekTime)
 
       this.loading = true
+      this.$root.$emit('dashboard-advanced-settings-loading', true)
       this.$axios.put('/api/config/admin', {
         config: this.config
       })
         .then((response) => {
           this.loading = false
+          this.$root.$emit('dashboard-advanced-settings-loading', false)
+          this.$store.commit('AudioPlayer/SET_WORK_TITLE_MODE', this.config.workTitleMode)
           this.showSuccNotif(response.data.message)
         })
         .catch((error) => {
           this.loading = false
+          this.$root.$emit('dashboard-advanced-settings-loading', false)
           if (error.response) {
             // 请求已发出，但服务器响应的状态码不在 2xx 范围内
             this.showErrNotif(error.response.data.error || `${error.response.status} ${error.response.statusText}`)
@@ -501,12 +541,22 @@ export default {
 
   created () {
     this.requestConfig()
+    this.$root.$on('dashboard-advanced-settings-submit', this.onSubmit)
 
+  },
+
+  beforeDestroy () {
+    this.$root.$off('dashboard-advanced-settings-submit', this.onSubmit)
+    this.$root.$emit('dashboard-advanced-settings-loading', false)
   }
 }
 </script>
 
 <style>
+.advanced-settings-select {
+  width: 220px;
+}
+
 @media (max-width: 599px) {
   .advanced-settings .q-item {
     height: auto !important;
@@ -520,6 +570,10 @@ export default {
     min-width: 0;
     padding-left: 0;
     align-self: stretch;
+  }
+
+  .advanced-settings-select {
+    width: 100%;
   }
 
   .advanced-settings .q-item .q-gutter-sm {

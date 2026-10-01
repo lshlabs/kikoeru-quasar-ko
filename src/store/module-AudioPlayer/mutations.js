@@ -143,6 +143,18 @@ const mutations = {
   SET_FORWARD_SEEK_TIME: (state, value) => {
     state.forwardSeekTime = value
   },
+  SET_WORK_TITLE_MODE: (state, value) => {
+    state.workTitleMode = ['metadata', 'folder', 'custom'].includes(value) ? value : 'metadata'
+  },
+
+  SET_WORK_TITLE_FOR_WORK: (state, { workId, title }) => {
+    const hashPrefix = `${workId}/`
+    state.queue.forEach(track => {
+      if (track.hash && track.hash.startsWith(hashPrefix)) {
+        track.workTitle = title
+      }
+    })
+  },
   SET_REWIND_SEEK_MODE: (state, value) => {
     state.rewindSeekMode = value
   },

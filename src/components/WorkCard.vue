@@ -10,13 +10,14 @@
       <!-- 标题 -->
       <div class="q-mx-sm text-h6 text-weight-regular ellipsis-2-lines">
         <router-link :to="`/work/${metadata.id}`" class="text-primary">
-          {{ metadata.title }}
+          {{ workDisplayTitle(metadata) }}
         </router-link>
       </div>
 
       <!-- 社团 -->
       <div class="q-ml-sm q-mt-sm q-mb-xs text-subtitle1 text-weight-regular ellipsis">
         <router-link :to="`/works?circleId=${metadata.circle.id}`" class="text-grey">
+          <q-icon name="groups" size="1em" class="metadata-role-icon" aria-hidden="true" />
           {{ metadata.circle.name }}
         </router-link>
       </div>
@@ -92,6 +93,7 @@
           :key=index
         >
           <q-chip square size="md" class="shadow-2" color="teal" text-color="white">
+            <q-icon name="mic" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{ va.name }}
           </q-chip>
         </router-link>
@@ -103,11 +105,12 @@
 <script>
 import CoverSFW from 'components/CoverSFW'
 import NotifyMixin from '../mixins/Notification.js'
+import WorkTitleMixin from '../mixins/WorkTitle.js'
 
 export default {
   name: 'WorkCard',
 
-  mixins: [NotifyMixin],
+  mixins: [NotifyMixin, WorkTitleMixin],
 
   components: {
     CoverSFW

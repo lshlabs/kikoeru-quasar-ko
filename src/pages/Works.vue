@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="row justify-between q-mb-md q-mx-sm works-filters">
+    <div class="q-mb-md q-mx-md works-filters">
       <div class="works-filter-selects">
       <!-- 排序属性 -->
       <q-select
@@ -91,6 +91,7 @@
         v-model="lyricOption"
         :options="lyricOptions"
         :option-label="humanReadableLabel"
+        :display-value="lyricOptionDisplay"
         label="자막 필터"
         clearable
         multiple
@@ -179,7 +180,7 @@
         </q-list>
 
         <!--旧式的workCard展示-->
-        <div v-if="oldWorkCardUIStyle" class="row q-col-gutter-x-md q-col-gutter-y-lg">
+        <div v-if="!listMode && oldWorkCardUIStyle" class="row q-col-gutter-x-md q-col-gutter-y-lg">
           <div class="col-xs-12 col-sm-6 col-md-4" v-for="work in works" :key="work.id"
             :class="detailMode ? 'col-lg-3 col-xl-2': 'col-lg-2 col-xl-2'"
           >
@@ -188,7 +189,7 @@
         </div>
 
         <!--解决android平台hover事件不像safari那样及时响应的问题，需要手动添加触摸响应时间-->
-        <div v-else-if="$q.platform.is.android && $q.platform.has.touch" class="row q-col-gutter-x-md q-col-gutter-y-lg">
+        <div v-else-if="!listMode && $q.platform.is.android && $q.platform.has.touch" class="row q-col-gutter-x-md q-col-gutter-y-lg">
           <div class="col-xs-12 col-sm-6 col-md-4" v-for="work in works" :key="work.id"
             @touchstart="()=>onWorkCardTouch(work.id)"
             :class="detailMode ? 'col-lg-3 col-xl-2': 'col-lg-2 col-xl-2'"
@@ -199,7 +200,7 @@
         </div>
 
         <!--正常的workCard展示-->
-        <div v-else class="row q-col-gutter-x-md q-col-gutter-y-lg">
+        <div v-else-if="!listMode" class="row q-col-gutter-x-md q-col-gutter-y-lg">
           <div class="col-xs-12 col-sm-6 col-md-4" v-for="work in works" :key="work.id"
             :class="detailMode ? 'col-lg-3 col-xl-2': 'col-lg-2 col-xl-2'"
             style="--sim-hover-work-card: 0"
@@ -208,7 +209,9 @@
           </div>
         </div>
 
-        <div v-show="stopLoad" class="q-mt-lg q-mb-xl text-h6 text-bold text-center">더 이상 작품이 없습니다.</div>
+        <div v-if="stopLoad && works.length === 0" class="works-empty-state row justify-center items-center text-h6 text-bold text-center text-grey">
+          작품이 없습니다.
+        </div>
 
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
@@ -261,7 +264,7 @@ export default {
       nsfwOptions: ["nsfw_0", "nsfw_1", "nsfw_2"], // nsfw_0无年龄限制，nsfw_1全年龄，nsfw_2十八禁
 
       lyricOption: [], // 注意，这个选项可多选，但是clear的时候，quasar可能会将其设置为null，需要特别注意
-      lyricOptions: ["lyric_local", "lyric_ai"],
+      lyricOptions: ["lyric_local", "lyric_ai", "lyric_none"],
 
       // 排序顺序，true表示降序，false表示升序
       sortInDesc: true,
@@ -319,6 +322,13 @@ export default {
   },
 
   computed: {
+    lyricOptionDisplay () {
+      const options = Array.isArray(this.lyricOption) ? this.lyricOption : []
+      if (options.length === 0) return ''
+      if (options.length === 1) return this.humanReadableLabel(options[0])
+      return `${options.length}개 선택`
+    },
+
     url () {
       const query = this.$route.query
       if (query.circleId) {
@@ -546,6 +556,7 @@ export default {
         case "nsfw_2": return "성인용";
         case "lyric_local": return "로컬 자막";
         case "lyric_ai": return "AI 자막";
+        case "lyric_none": return "자막 없음";
         default: return label;
       }
     },
@@ -591,11 +602,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.works-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 8px;
+}
+
 .works-filter-selects,
 .works-filter-controls {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+}
+
+.works-empty-state {
+  min-height: 40vh;
 }
 
 .works-filter-selects {
@@ -603,7 +627,8 @@ export default {
 }
 
 .works-filter-controls {
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-self: end;
 }
 
 .works-sort-select {
@@ -615,11 +640,25 @@ export default {
   width: 144px;
 }
 
-@media (max-width: 599px) {
+@media (max-width: 899px) {
   .works-filters {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: 8px;
   }
 
+  .works-filter-selects,
+  .works-filter-controls {
+    width: 100%;
+  }
+
+  .works-filter-controls {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 599px) {
   .works-filter-selects,
   .works-filter-controls {
     width: 100%;
@@ -633,6 +672,10 @@ export default {
   .works-filter-selects .q-select {
     width: 100%;
     min-width: 0;
+  }
+
+  .works-filter-selects .works-lyric-select {
+    grid-column: 1 / -1;
   }
 
   .works-filter-controls {

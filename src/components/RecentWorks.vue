@@ -32,7 +32,7 @@
                   {{ getWorkHistoryInfo(item) }}
                 </div>
                 <div class="ellipsis workText" >
-                  {{ item.title }}
+                  {{ workDisplayTitle(item) }}
                 </div>
               </div>
             </template>
@@ -46,9 +46,12 @@
 <script>
 
 import CoverSFW from './CoverSFW.vue';
+import WorkTitleMixin from '../mixins/WorkTitle.js'
 
 export default {
   name: 'RecentWorks',
+
+  mixins: [WorkTitleMixin],
 
   components: {
     CoverSFW
@@ -116,7 +119,7 @@ export default {
     resumeThisHistroy(work) {
       this.$store.commit('AudioPlayer/SET_QUEUE', {
         workId: work.id,
-        queue: work.state.queue,
+        queue: this.workTitleQueue(work, work.state.queue),
         index: work.state.index,
         resetPlaying: false,
         resumeHistroySeconds: work.state.seconds,

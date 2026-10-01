@@ -9,13 +9,14 @@
     <q-item-section>
       <q-item-label lines="2" class="text">
         <router-link :to="`/work/${metadata.id}`" class="text-secondary">
-          {{ metadata.title }}
+          {{ workDisplayTitle(metadata) }}
         </router-link>
       </q-item-label>
 
       <q-item-label>
         <div class="row q-gutter-x-sm q-gutter-y-xs">
           <router-link :to="`/works?circleId=${metadata.circle.id}`" class="col-auto text-grey">
+            <q-icon name="groups" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{ metadata.circle.name }}
           </router-link>
 
@@ -27,6 +28,7 @@
             :key=index
             class="col-auto text-primary"
           >
+            <q-icon name="mic" size="1em" class="metadata-role-icon" aria-hidden="true" />
             {{ va.name }}
           </router-link>
         </div>
@@ -49,9 +51,12 @@
 </template>
 
 <script>
+import WorkTitleMixin from '../mixins/WorkTitle.js'
 
 export default {
   name: 'WorkListItem',
+
+  mixins: [WorkTitleMixin],
 
   props: {
     metadata: {

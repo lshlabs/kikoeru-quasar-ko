@@ -13,7 +13,7 @@
             :options="[
               {label: '재생 기록', value: 'histroy'},
               {label: '내 평가', value: 'review'},
-              {label: '감상 상태', value: 'progress'},
+              {label: '청취 상태', value: 'progress'},
               {label: '분류별 정리', value: 'folder'},
             ]"
           />
@@ -61,7 +61,7 @@
     <div>
       <div class="q-px-sm q-pt-md">
         <q-infinite-scroll @load="onLoad" :offset="500" :disable="stopLoad" ref="scroll" v-if="mode !=='folder'">
-          <div class="row justify-center text-grey" v-if="works.length === 0">작품에서 별점을 주거나 감상 상태를 표시하면 여기에 나타납니다.</div>
+          <div class="row justify-center text-grey" v-if="works.length === 0">작품에 별점을 주거나 청취 상태를 지정하면 여기에 표시됩니다.</div>
           <q-list bordered separator class="shadow-2" v-if="works.length">
              <FavListItem v-for="work in works" :key="work.id" :workid="work.id" :metadata="work" @reset="reset()" :mode="mode"></FavListItem> 
           </q-list>

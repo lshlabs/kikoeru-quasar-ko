@@ -1,9 +1,17 @@
 <template>
-  <q-layout view="hhh LpR fFf">
+  <q-layout :view="isAdvancedSettings ? 'Hhh LpR fFf' : 'hhh LpR fFf'">
     <q-header elevated class="bg-black">
       <q-toolbar>
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>관리자 화면</q-toolbar-title>
+        <q-btn
+          v-if="isAdvancedSettings"
+          :loading="advancedSettingsLoading"
+          label="저장"
+          color="primary"
+          dense
+          @click="$root.$emit('dashboard-advanced-settings-submit')"
+        />
       </q-toolbar>
     </q-header>
 
@@ -63,6 +71,7 @@ export default {
     return {
       drawer: false,
       miniState: true,
+      advancedSettingsLoading: false,
       links: [
         {
           title: '음성 라이브러리',
@@ -94,6 +103,12 @@ export default {
     }
   },
 
+  computed: {
+    isAdvancedSettings () {
+      return this.$route.path === '/admin/advanced'
+    }
+  },
+
   sockets: {
     success (payload) {
       this.showSuccNotif(
@@ -115,12 +130,24 @@ export default {
   },
 
   created () {
+    this.$root.$on('dashboard-advanced-settings-loading', this.setAdvancedSettingsLoading)
+
     // 从 LocalStorage 中读取 token
     const token = this.$q.localStorage.getItem('jwt-token') || ''
     this.$socket.io.opts.query.auth_token = token
     
     if (!this.$socket.connected) {
       this.$socket.open()
+    }
+  },
+
+  beforeDestroy () {
+    this.$root.$off('dashboard-advanced-settings-loading', this.setAdvancedSettingsLoading)
+  },
+
+  methods: {
+    setAdvancedSettingsLoading (loading) {
+      this.advancedSettingsLoading = loading
     }
   }
 }

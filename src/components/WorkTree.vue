@@ -1,14 +1,64 @@
 <template>
   <div class="q-ma-md " style="">
-    <q-breadcrumbs gutter="xs" v-if="path.length">
-      <q-breadcrumbs-el   >
-        <q-btn no-caps flat dense size="md" icon="folder" @click="path = []">최상위</q-btn>
-      </q-breadcrumbs-el>
-      
-      <q-breadcrumbs-el v-for="(folderName, index) in path"  :key="index"  class="cursor-pointer" >
-        <q-btn no-caps flat dense size="md" icon="folder" @click="onClickBreadcrumb(index)">{{folderName}}</q-btn>
-      </q-breadcrumbs-el>
-    </q-breadcrumbs>
+    <div v-if="path.length" class="row items-center no-wrap">
+      <q-breadcrumbs gutter="xs" class="col work-breadcrumbs">
+        <q-breadcrumbs-el>
+          <q-btn no-caps flat dense size="md" icon="folder" class="work-breadcrumb-root" @click="path = []">최상위</q-btn>
+        </q-breadcrumbs-el>
+
+        <q-breadcrumbs-el v-if="hiddenBreadcrumbs.length" class="work-breadcrumb-item work-breadcrumb-overflow">
+          <q-btn
+            no-caps
+            flat
+            dense
+            round
+            size="sm"
+            icon="more_horiz"
+            aria-label="숨겨진 상위 폴더 보기"
+            title="숨겨진 상위 폴더 보기"
+            class="work-breadcrumb-more"
+          >
+            <q-menu anchor="bottom left" self="top left">
+              <q-list dense class="work-breadcrumb-menu">
+                <q-item
+                  v-for="folder in hiddenBreadcrumbs"
+                  :key="folder.index"
+                  clickable
+                  v-close-popup
+                  @click="onClickBreadcrumb(folder.index)"
+                >
+                  <q-item-section>{{ folder.name }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-breadcrumbs-el>
+
+        <q-breadcrumbs-el v-for="folder in visibleBreadcrumbs" :key="folder.index" class="work-breadcrumb-item">
+          <q-btn
+            no-caps
+            flat
+            dense
+            size="md"
+            class="work-breadcrumb-button"
+            :label="folder.name"
+            :title="folder.name"
+            @click="onClickBreadcrumb(folder.index)"
+          />
+        </q-breadcrumbs-el>
+      </q-breadcrumbs>
+      <q-btn
+        flat
+        round
+        dense
+        size="md"
+        icon="arrow_back"
+        aria-label="상위 폴더로 이동"
+        title="상위 폴더로 이동"
+        class="q-ml-sm"
+        @click="path = path.slice(0, -1)"
+      />
+    </div>
 
     <q-dialog v-model="preview_img" full-width>
       <q-card v-if="preview_img_list.length">
@@ -180,6 +230,19 @@ export default {
   },
 
   computed: {
+    hiddenBreadcrumbs() {
+      if (this.path.length <= 2) return [];
+      return this.path.slice(0, -2).map((name, index) => ({ name, index }));
+    },
+
+    visibleBreadcrumbs() {
+      const firstVisibleIndex = this.path.length > 2 ? this.path.length - 2 : 0;
+      return this.path.slice(firstVisibleIndex).map((name, index) => ({
+        name,
+        index: firstVisibleIndex + index,
+      }));
+    },
+
     fatherFolder () {
       let fatherFolder = this.internalTree.concat()
       this.path.forEach(folderName => {
@@ -511,3 +574,55 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.work-breadcrumbs {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.work-breadcrumbs > .flex {
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.work-breadcrumbs > .flex > div,
+.work-breadcrumb-item {
+  min-width: 0;
+}
+
+.work-breadcrumb-root {
+  max-width: 96px;
+}
+
+.work-breadcrumb-overflow {
+  flex: 0 0 auto;
+}
+
+.work-breadcrumb-more {
+  min-width: 28px;
+}
+
+.work-breadcrumb-menu {
+  min-width: 180px;
+  max-width: 80vw;
+}
+
+.work-breadcrumb-button {
+  max-width: clamp(44px, calc((100vw - 290px) / 2), 280px);
+  min-width: 0;
+}
+
+.work-breadcrumb-button .q-btn__content {
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.work-breadcrumb-button .block {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>
